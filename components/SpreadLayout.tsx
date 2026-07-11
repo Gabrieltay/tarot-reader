@@ -22,9 +22,9 @@ function SingleLayout({ cards }: { cards: DrawnCard[] }) {
 
 function ThreeCardLayout({ cards }: { cards: DrawnCard[] }) {
   return (
-    <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
+    <div className="flex flex-wrap justify-center gap-4 sm:gap-8 md:gap-12">
       {cards.map((c, i) => (
-        <div key={c.card.id} className="w-32 sm:w-40">
+        <div key={c.card.id} className="w-24 sm:w-32 md:w-40">
           <TarotCard drawn={c} delayMs={i * STAGGER_MS} />
         </div>
       ))}
@@ -39,9 +39,9 @@ function CelticCrossLayout({ cards }: { cards: DrawnCard[] }) {
     cards;
 
   return (
-    <div className="flex flex-col xl:flex-row gap-12 items-center xl:items-start justify-center">
+    <div className="flex flex-col xl:flex-row gap-8 sm:gap-12 items-center xl:items-start justify-center">
       <div
-        className="grid grid-cols-3 gap-5 sm:gap-7 w-fit"
+        className="grid grid-cols-3 gap-2 sm:gap-5 md:gap-7 w-fit max-w-full"
         style={{
           gridTemplateAreas: `
             ". crown ."
@@ -51,37 +51,37 @@ function CelticCrossLayout({ cards }: { cards: DrawnCard[] }) {
           `,
         }}
       >
-        <div className="w-24 sm:w-32" style={{ gridArea: "crown" }}>
+        <div className="w-16 sm:w-24 md:w-32" style={{ gridArea: "crown" }}>
           <TarotCard drawn={crown} delayMs={4 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32" style={{ gridArea: "past" }}>
+        <div className="w-16 sm:w-24 md:w-32" style={{ gridArea: "past" }}>
           <TarotCard drawn={past} delayMs={3 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32" style={{ gridArea: "present" }}>
+        <div className="w-16 sm:w-24 md:w-32" style={{ gridArea: "present" }}>
           <TarotCard drawn={present} delayMs={0 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32" style={{ gridArea: "future" }}>
+        <div className="w-16 sm:w-24 md:w-32" style={{ gridArea: "future" }}>
           <TarotCard drawn={future} delayMs={5 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32" style={{ gridArea: "challenge" }}>
+        <div className="w-16 sm:w-24 md:w-32" style={{ gridArea: "challenge" }}>
           <TarotCard drawn={challenge} delayMs={1 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32" style={{ gridArea: "foundation" }}>
+        <div className="w-16 sm:w-24 md:w-32" style={{ gridArea: "foundation" }}>
           <TarotCard drawn={foundation} delayMs={2 * STAGGER_MS} />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 xl:grid-cols-1 gap-5 sm:gap-7 w-fit">
-        <div className="w-24 sm:w-32">
+      <div className="grid grid-cols-2 xl:grid-cols-1 gap-2 sm:gap-5 md:gap-7 w-fit max-w-full">
+        <div className="w-16 sm:w-24 md:w-32">
           <TarotCard drawn={outcome} delayMs={9 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32">
+        <div className="w-16 sm:w-24 md:w-32">
           <TarotCard drawn={hopesFears} delayMs={8 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32">
+        <div className="w-16 sm:w-24 md:w-32">
           <TarotCard drawn={external} delayMs={7 * STAGGER_MS} />
         </div>
-        <div className="w-24 sm:w-32">
+        <div className="w-16 sm:w-24 md:w-32">
           <TarotCard drawn={attitude} delayMs={6 * STAGGER_MS} />
         </div>
       </div>
