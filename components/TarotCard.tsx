@@ -21,8 +21,8 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {showLabel && (
-        <div className="text-center">
-          <div className="text-[11px] uppercase tracking-[0.18em] text-gold-soft/80 font-sans font-medium">
+        <div className="text-center px-0.5">
+          <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.03em] sm:tracking-[0.18em] text-gold-soft/80 font-sans font-medium break-words">
             {drawn.position.label}
           </div>
         </div>
@@ -58,7 +58,9 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
       </div>
       {flipped && (
         <div className="text-center animate-fade-in-up flex flex-col items-center gap-1.5">
-          <div className="font-display text-lg text-warm-white">{drawn.card.name}</div>
+          <div className="font-display text-lg leading-snug text-warm-white min-h-[2.75em] flex items-center justify-center">
+            {drawn.card.name}
+          </div>
           <span
             className={`inline-block rounded-full border px-3 py-0.5 text-[10px] uppercase tracking-[0.14em] font-sans ${
               drawn.reversed
