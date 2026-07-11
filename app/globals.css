@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+:root {
+  /* Palette */
+  --color-midnight: #1b1535;
+  --color-midnight-deep: #120e26;
+  --color-mystic: #2e1e5f;
+  --color-ivory: #f7f1e6;
+  --color-ivory-deep: #efe6d3;
+  --color-gold: #d6b56a;
+  --color-gold-soft: #e8cd93;
+  --color-gold-deep: #a67c3d;
+  --color-lavender: #b89be7;
+  --color-warm-white: #f9f6ef;
+  --color-lavender-gray: #cfc8dd;
+  --color-sage: #9cb08a;
+  --color-rose: #c98b8b;
+  --color-ink: #2f2542;
+  --color-ink-soft: #6c6280;
+}
+
+@theme inline {
+  --color-midnight: var(--color-midnight);
+  --color-midnight-deep: var(--color-midnight-deep);
+  --color-mystic: var(--color-mystic);
+  --color-ivory: var(--color-ivory);
+  --color-ivory-deep: var(--color-ivory-deep);
+  --color-gold: var(--color-gold);
+  --color-gold-soft: var(--color-gold-soft);
+  --color-gold-deep: var(--color-gold-deep);
+  --color-lavender: var(--color-lavender);
+  --color-warm-white: var(--color-warm-white);
+  --color-lavender-gray: var(--color-lavender-gray);
+  --color-sage: var(--color-sage);
+  --color-rose: var(--color-rose);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background:
+    radial-gradient(ellipse 900px 560px at 50% -8%, rgba(184, 155, 231, 0.14), transparent 62%),
+    radial-gradient(ellipse 700px 460px at 88% 12%, rgba(214, 181, 106, 0.08), transparent 58%),
+    radial-gradient(ellipse 640px 480px at 6% 92%, rgba(46, 30, 95, 0.55), transparent 60%),
+    linear-gradient(180deg, #211a49 0%, var(--color-midnight) 48%, var(--color-midnight-deep) 100%);
+  color: var(--color-warm-white);
+  font-family: var(--font-sans), -apple-system, "SF Pro Text", Arial, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display), "Cormorant Garamond", Georgia, serif;
+}
+
+/* ---------- Decorative celestial backdrop ---------- */
+
+.stars-layer {
+  position: absolute;
+  inset: -10%;
+  background-repeat: repeat;
+  pointer-events: none;
+}
+
+.stars-layer-fine {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(249, 246, 239, 0.55), transparent),
+    radial-gradient(1px 1px at 34% 62%, rgba(249, 246, 239, 0.4), transparent),
+    radial-gradient(1.2px 1.2px at 58% 24%, rgba(214, 181, 106, 0.5), transparent),
+    radial-gradient(1px 1px at 76% 78%, rgba(249, 246, 239, 0.4), transparent),
+    radial-gradient(1.2px 1.2px at 91% 40%, rgba(184, 155, 231, 0.45), transparent),
+    radial-gradient(1px 1px at 22% 88%, rgba(249, 246, 239, 0.35), transparent),
+    radial-gradient(1.2px 1.2px at 45% 8%, rgba(214, 181, 106, 0.4), transparent);
+  background-size: 480px 480px;
+  animation: twinkle 9s ease-in-out infinite;
+}
+
+.stars-layer-coarse {
+  background-image:
+    radial-gradient(1.6px 1.6px at 15% 45%, rgba(249, 246, 239, 0.5), transparent),
+    radial-gradient(1.6px 1.6px at 68% 15%, rgba(214, 181, 106, 0.5), transparent),
+    radial-gradient(1.6px 1.6px at 85% 65%, rgba(249, 246, 239, 0.4), transparent),
+    radial-gradient(1.6px 1.6px at 38% 82%, rgba(184, 155, 231, 0.4), transparent);
+  background-size: 620px 620px;
+  animation: twinkle 13s ease-in-out infinite reverse;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* ---------- Surfaces ---------- */
+
+.ivory-panel {
+  background: linear-gradient(180deg, var(--color-ivory) 0%, var(--color-ivory-deep) 100%);
+  border-radius: 1.5rem;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 24px 60px -20px rgba(10, 6, 26, 0.55),
+    0 8px 24px -12px rgba(10, 6, 26, 0.4);
+  color: var(--color-ink);
+}
+
+.glass-panel {
+  background: rgba(247, 241, 230, 0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(214, 181, 106, 0.16);
+}
+
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(214, 181, 106, 0.55) 20%,
+    rgba(214, 181, 106, 0.85) 50%,
+    rgba(214, 181, 106, 0.55) 80%,
+    transparent 100%
+  );
+}
+
+.gold-divider-soft {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(47, 37, 66, 0.18) 20%,
+    rgba(47, 37, 66, 0.28) 50%,
+    rgba(47, 37, 66, 0.18) 80%,
+    transparent 100%
+  );
+}
+
+.glow-gold {
+  box-shadow: 0 0 0 1px rgba(214, 181, 106, 0.35), 0 0 32px 4px rgba(214, 181, 106, 0.22);
+}
+
+/* ---------- Card flip ---------- */
+
+.perspective {
+  perspective: 1400px;
+}
+
+.flip-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.flip-card.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  transition: box-shadow 0.6s ease;
+}
+
+.flip-face-back {
+  transform: rotateY(180deg);
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+.animate-gentle-pulse {
+  animation: gentle-pulse 2.4s ease-in-out infinite;
+}
+
+/* ---------- Drop cap for the reading text ---------- */
+
+.manuscript-text > p:first-of-type::first-letter {
+  font-family: var(--font-display), serif;
+  font-size: 3.4rem;
+  line-height: 0.78;
+  float: left;
+  padding: 0.1rem 0.5rem 0 0;
+  color: var(--color-gold);
+}
+
+::selection {
+  background: rgba(214, 181, 106, 0.35);
+  color: var(--color-ink);
+}

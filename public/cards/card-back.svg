@@ -1,0 +1,123 @@
+<svg width="744" height="1240" viewBox="0 0 744 1240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="72" y1="64" x2="672" y2="1176" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2E1E5F"/>
+      <stop offset="1" stop-color="#171126"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(372 620) rotate(90) scale(360 290)">
+      <stop stop-color="#5B3E7B" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#1B1535" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="stars" width="92" height="92" patternUnits="userSpaceOnUse">
+      <circle cx="14" cy="18" r="1.2" fill="#D6B56A" opacity="0.75"/>
+      <circle cx="66" cy="26" r="0.9" fill="#B89BE7" opacity="0.65"/>
+      <circle cx="42" cy="71" r="1.1" fill="#F7F1E6" opacity="0.45"/>
+      <path d="M78 64H84M81 61V67" stroke="#D6B56A" stroke-width="1" opacity="0.35"/>
+    </pattern>
+    <clipPath id="cardClip">
+      <rect x="22" y="22" width="700" height="1196" rx="44"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#cardClip)">
+    <rect x="22" y="22" width="700" height="1196" rx="44" fill="url(#bg)"/>
+    <rect x="22" y="22" width="700" height="1196" rx="44" fill="url(#glow)"/>
+    <rect x="22" y="22" width="700" height="1196" rx="44" fill="url(#stars)" opacity="0.8"/>
+
+    <!-- Outer frame -->
+    <rect x="38" y="38" width="668" height="1164" rx="34" stroke="#D6B56A" stroke-width="4"/>
+    <rect x="56" y="56" width="632" height="1128" rx="28" stroke="#B89BE7" stroke-width="2" opacity="0.85"/>
+    <rect x="74" y="74" width="596" height="1092" rx="22" stroke="#D6B56A" stroke-width="1.5" opacity="0.75"/>
+
+    <!-- Corner ornaments -->
+    <g stroke="#D6B56A" stroke-width="3" fill="none" opacity="0.95">
+      <path d="M92 172C92 132 124 100 164 100"/>
+      <path d="M652 172C652 132 620 100 580 100"/>
+      <path d="M92 1068C92 1108 124 1140 164 1140"/>
+      <path d="M652 1068C652 1108 620 1140 580 1140"/>
+    </g>
+
+    <!-- Top celestial mark -->
+    <g transform="translate(372 178)">
+      <circle r="46" stroke="#D6B56A" stroke-width="3"/>
+      <circle r="28" stroke="#B89BE7" stroke-width="2"/>
+      <path d="M0 -70V-54M0 54V70M-70 0H-54M54 0H70M-49 -49L-38 -38M38 38L49 49M49 -49L38 -38M-38 38L-49 49"
+        stroke="#D6B56A" stroke-width="3" stroke-linecap="round"/>
+      <circle r="8" fill="#D6B56A"/>
+    </g>
+
+    <!-- Central moon and eye -->
+    <g transform="translate(372 620)">
+      <circle r="220" stroke="#D6B56A" stroke-width="4" opacity="0.9"/>
+      <circle r="190" stroke="#B89BE7" stroke-width="2" opacity="0.75"/>
+      <path d="M-124 0C-70 -54 70 -54 124 0C70 54 -70 54 -124 0Z" stroke="#F7F1E6" stroke-width="5" fill="none"/>
+      <ellipse rx="38" ry="58" fill="#1B1535" stroke="#D6B56A" stroke-width="5"/>
+      <circle r="14" fill="#D6B56A" filter="url(#softGlow)"/>
+      <path d="M0 -170C-78 -138 -116 -72 -116 0C-116 72 -78 138 0 170C-42 126 -60 68 -60 0C-60 -68 -42 -126 0 -170Z"
+        fill="#F7F1E6" opacity="0.92"/>
+      <circle r="132" stroke="#D6B56A" stroke-width="2" stroke-dasharray="3 12" opacity="0.85"/>
+
+      <!-- Orbit stars -->
+      <g fill="#D6B56A">
+        <circle cx="0" cy="-190" r="6"/>
+        <circle cx="164" cy="-94" r="5"/>
+        <circle cx="164" cy="94" r="5"/>
+        <circle cx="0" cy="190" r="6"/>
+        <circle cx="-164" cy="94" r="5"/>
+        <circle cx="-164" cy="-94" r="5"/>
+      </g>
+
+      <!-- Rays -->
+      <g stroke="#D6B56A" stroke-width="3" stroke-linecap="round" opacity="0.9">
+        <path d="M0 -252V-230"/>
+        <path d="M0 230V252"/>
+        <path d="M-252 0H-230"/>
+        <path d="M230 0H252"/>
+        <path d="M-178 -178L-162 -162"/>
+        <path d="M162 162L178 178"/>
+        <path d="M178 -178L162 -162"/>
+        <path d="M-162 162L-178 178"/>
+      </g>
+    </g>
+
+    <!-- Botanical flourishes -->
+    <g stroke="#B89BE7" stroke-width="3" fill="none" opacity="0.9">
+      <path d="M168 390C126 436 112 496 126 554"/>
+      <path d="M576 390C618 436 632 496 618 554"/>
+      <path d="M168 850C126 804 112 744 126 686"/>
+      <path d="M576 850C618 804 632 744 618 686"/>
+      <path d="M142 468C118 448 106 424 108 398"/>
+      <path d="M142 468C118 484 104 506 102 532"/>
+      <path d="M602 468C626 448 638 424 636 398"/>
+      <path d="M602 468C626 484 640 506 642 532"/>
+      <path d="M142 772C118 792 106 816 108 842"/>
+      <path d="M142 772C118 756 104 734 102 708"/>
+      <path d="M602 772C626 792 638 816 636 842"/>
+      <path d="M602 772C626 756 640 734 642 708"/>
+    </g>
+
+    <!-- Bottom symbol -->
+    <g transform="translate(372 1062)">
+      <path d="M0 -52L14 -14L52 0L14 14L0 52L-14 14L-52 0L-14 -14Z"
+        stroke="#D6B56A" stroke-width="3" fill="none"/>
+      <circle r="10" fill="#B89BE7"/>
+      <path d="M-82 0H-62M62 0H82" stroke="#D6B56A" stroke-width="3" stroke-linecap="round"/>
+    </g>
+
+    <!-- Tiny accent stars -->
+    <g stroke="#D6B56A" stroke-width="2" stroke-linecap="round" opacity="0.9">
+      <path d="M176 260H194M185 251V269"/>
+      <path d="M550 260H568M559 251V269"/>
+      <path d="M176 980H194M185 971V989"/>
+      <path d="M550 980H568M559 971V989"/>
+    </g>
+  </g>
+</svg>
