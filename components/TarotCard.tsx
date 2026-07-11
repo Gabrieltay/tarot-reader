@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DrawnCard } from "@/types/tarot";
+import CardZoomOverlay from "./CardZoomOverlay";
 
 interface TarotCardProps {
   drawn: DrawnCard;
@@ -12,6 +13,7 @@ interface TarotCardProps {
 
 export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: TarotCardProps) {
   const [flipped, setFlipped] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setFlipped(true), delayMs);
@@ -28,7 +30,19 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
         </div>
       )}
       <div className="perspective w-full aspect-[2/3] max-w-[160px]">
-        <div className={`flip-card w-full h-full ${flipped ? "is-flipped" : ""}`}>
+        <div
+          className={`flip-card w-full h-full ${flipped ? "is-flipped" : ""}`}
+          onClick={() => flipped && setZoomed(true)}
+          role={flipped ? "button" : undefined}
+          tabIndex={flipped ? 0 : undefined}
+          aria-label={flipped ? `Enlarge ${drawn.card.name}` : undefined}
+          onKeyDown={(e) => {
+            if (flipped && (e.key === "Enter" || e.key === " ")) {
+              e.preventDefault();
+              setZoomed(true);
+            }
+          }}
+        >
           <div className="flip-face flip-face-front shadow-[0_18px_36px_-14px_rgba(5,2,16,0.7)]">
             <Image
               src="/cards/card-back.svg"
@@ -41,7 +55,7 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
           </div>
           <div
             className={`flip-face flip-face-back shadow-[0_18px_36px_-14px_rgba(5,2,16,0.7)] ${
-              flipped ? "glow-gold" : ""
+              flipped ? "glow-gold cursor-zoom-in" : ""
             }`}
           >
             <div className="relative w-full h-full bg-midnight-deep">
@@ -72,6 +86,7 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
           </span>
         </div>
       )}
+      {zoomed && <CardZoomOverlay drawn={drawn} onClose={() => setZoomed(false)} />}
     </div>
   );
 }
