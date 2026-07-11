@@ -5,6 +5,7 @@ import QuestionInput from "@/components/QuestionInput";
 import SpreadSelector from "@/components/SpreadSelector";
 import SpreadLayout from "@/components/SpreadLayout";
 import Interpretation from "@/components/Interpretation";
+import IvoryPanel from "@/components/IvoryPanel";
 import { drawSpread } from "@/lib/draw";
 import { SPREADS } from "@/lib/spreads";
 import { DrawnCard, SpreadId } from "@/types/tarot";
@@ -78,39 +79,62 @@ export default function Home() {
   const canDraw = question.trim().length > 0;
 
   return (
-    <div className="flex flex-1 flex-col items-center px-4 py-10 sm:py-16">
-      <header className="text-center mb-10">
-        <h1 className="font-display text-3xl sm:text-4xl tracking-wide text-mystic-gold">
+    <div className="flex flex-1 flex-col items-center px-4 py-14 sm:py-20">
+      <header className="text-center mb-12 sm:mb-16">
+        <svg
+          className="mx-auto mb-4 opacity-80"
+          width="28"
+          height="28"
+          viewBox="0 0 28 28"
+          fill="none"
+        >
+          <path
+            d="M17 4a11 11 0 1 0 0 20 8.8 8.8 0 0 1 0-20Z"
+            stroke="#D6B56A"
+            strokeWidth="1"
+          />
+        </svg>
+        <h1 className="font-display text-4xl sm:text-5xl text-gold-soft tracking-wide">
           Tarot Reader
         </h1>
-        <p className="text-purple-200/60 mt-2 max-w-md mx-auto">
+        <p className="text-lavender-gray/70 mt-3 max-w-md mx-auto font-sans text-[15px] leading-relaxed">
           Ask a question, draw your cards, and receive a reading woven just for
           you.
         </p>
       </header>
 
       {stage === "setup" && (
-        <div className="w-full max-w-xl flex flex-col gap-8">
-          <QuestionInput value={question} onChange={setQuestion} />
-          <SpreadSelector value={spreadId} onChange={setSpreadId} />
-          <button
-            type="button"
-            disabled={!canDraw}
-            onClick={handleDraw}
-            className="w-full rounded-lg bg-mystic-gold text-[#241645] font-display tracking-wide text-lg py-3 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 cursor-pointer"
-          >
-            Draw Your Cards
-          </button>
+        <div className="w-full max-w-xl animate-fade-in-up">
+          <IvoryPanel>
+            <div className="flex flex-col gap-9">
+              <div className="text-center">
+                <p className="text-[11px] uppercase tracking-[0.2em] text-gold-deep/80 font-sans font-medium">
+                  Begin Your Reading
+                </p>
+              </div>
+              <QuestionInput value={question} onChange={setQuestion} />
+              <div className="gold-divider-soft" />
+              <SpreadSelector value={spreadId} onChange={setSpreadId} />
+              <button
+                type="button"
+                disabled={!canDraw}
+                onClick={handleDraw}
+                className="w-full rounded-full bg-gradient-to-b from-gold-soft to-gold text-ink font-display text-xl tracking-wide py-3.5 transition-all disabled:opacity-35 disabled:cursor-not-allowed enabled:hover:shadow-[0_8px_24px_-6px_rgba(166,124,61,0.55)] enabled:hover:-translate-y-0.5 cursor-pointer"
+              >
+                Draw Your Cards
+              </button>
+            </div>
+          </IvoryPanel>
         </div>
       )}
 
       {stage === "reading" && (
-        <div className="w-full flex flex-col items-center gap-10">
-          <div className="text-center max-w-xl">
-            <p className="text-purple-200/50 text-sm uppercase tracking-widest">
+        <div className="w-full flex flex-col items-center gap-12 animate-fade-in-up">
+          <div className="text-center max-w-xl flex flex-col items-center gap-3">
+            <span className="inline-block rounded-full border border-gold/30 bg-white/[0.04] px-4 py-1.5 text-[11px] uppercase tracking-[0.2em] text-gold-soft/90 font-sans">
               {SPREADS[spreadId].name}
-            </p>
-            <p className="text-lg text-foreground mt-1 italic">
+            </span>
+            <p className="font-display text-2xl text-warm-white/95 italic px-4">
               &ldquo;{question}&rdquo;
             </p>
           </div>
@@ -127,18 +151,18 @@ export default function Home() {
             text={interpretation}
           />
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-col sm:flex-row gap-4 mt-2">
             <button
               type="button"
               onClick={handleDrawAgain}
-              className="rounded-lg border border-mystic-gold/60 text-mystic-gold px-6 py-2.5 font-display tracking-wide hover:bg-mystic-gold/10 transition-colors cursor-pointer"
+              className="rounded-full border border-gold/50 text-gold-soft px-7 py-2.5 font-display text-lg tracking-wide hover:bg-gold/10 hover:border-gold/70 transition-colors cursor-pointer"
             >
               Draw Again
             </button>
             <button
               type="button"
               onClick={handleNewQuestion}
-              className="rounded-lg border border-purple-300/30 text-purple-200/80 px-6 py-2.5 font-display tracking-wide hover:bg-white/5 transition-colors cursor-pointer"
+              className="rounded-full border border-lavender-gray/25 text-lavender-gray/85 px-7 py-2.5 font-display text-lg tracking-wide hover:bg-white/5 hover:border-lavender-gray/40 transition-colors cursor-pointer"
             >
               New Question
             </button>

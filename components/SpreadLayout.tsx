@@ -13,7 +13,7 @@ const STAGGER_MS = 220;
 function SingleLayout({ cards }: { cards: DrawnCard[] }) {
   return (
     <div className="flex justify-center">
-      <div className="w-40 sm:w-48">
+      <div className="w-44 sm:w-56">
         <TarotCard drawn={cards[0]} delayMs={0} />
       </div>
     </div>
@@ -22,7 +22,7 @@ function SingleLayout({ cards }: { cards: DrawnCard[] }) {
 
 function ThreeCardLayout({ cards }: { cards: DrawnCard[] }) {
   return (
-    <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+    <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
       {cards.map((c, i) => (
         <div key={c.card.id} className="w-32 sm:w-40">
           <TarotCard drawn={c} delayMs={i * STAGGER_MS} />
@@ -39,9 +39,9 @@ function CelticCrossLayout({ cards }: { cards: DrawnCard[] }) {
     cards;
 
   return (
-    <div className="flex flex-col xl:flex-row gap-8 items-center xl:items-start justify-center">
+    <div className="flex flex-col xl:flex-row gap-12 items-center xl:items-start justify-center">
       <div
-        className="grid grid-cols-3 gap-3 sm:gap-4 w-fit"
+        className="grid grid-cols-3 gap-5 sm:gap-7 w-fit"
         style={{
           gridTemplateAreas: `
             ". crown ."
@@ -71,7 +71,7 @@ function CelticCrossLayout({ cards }: { cards: DrawnCard[] }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 xl:grid-cols-1 gap-3 sm:gap-4 w-fit">
+      <div className="grid grid-cols-2 xl:grid-cols-1 gap-5 sm:gap-7 w-fit">
         <div className="w-24 sm:w-32">
           <TarotCard drawn={outcome} delayMs={9 * STAGGER_MS} />
         </div>
