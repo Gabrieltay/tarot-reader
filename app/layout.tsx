@@ -32,7 +32,30 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${cinzel.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <div className="flex flex-col flex-1">{children}</div>
+        <footer className="text-center text-xs text-purple-300/40 py-6 px-4">
+          Card art: Soimoi deck via{" "}
+          <a
+            href="https://github.com/mixvlad/TarotCards"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-purple-200/60"
+          >
+            mixvlad/TarotCards
+          </a>
+          , licensed{" "}
+          <a
+            href="https://creativecommons.org/licenses/by-nc/4.0/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-purple-200/60"
+          >
+            CC BY-NC 4.0
+          </a>
+          .
+        </footer>
+      </body>
     </html>
   );
 }
