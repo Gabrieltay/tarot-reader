@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { DrawnCard } from "@/types/tarot";
+import CardZoomOverlay from "./CardZoomOverlay";
 
 interface TarotCardProps {
   drawn: DrawnCard;
@@ -12,6 +13,7 @@ interface TarotCardProps {
 
 export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: TarotCardProps) {
   const [flipped, setFlipped] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => setFlipped(true), delayMs);
@@ -21,14 +23,26 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {showLabel && (
-        <div className="text-center px-0.5">
-          <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.03em] sm:tracking-[0.18em] text-gold-soft/80 font-sans font-medium break-words">
+        <div className="text-center px-0.5 w-full">
+          <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.03em] sm:tracking-[0.18em] text-gold-soft/80 font-sans font-medium break-words leading-tight min-h-[2.4em] flex items-center justify-center">
             {drawn.position.label}
           </div>
         </div>
       )}
       <div className="perspective w-full aspect-[2/3] max-w-[160px]">
-        <div className={`flip-card w-full h-full ${flipped ? "is-flipped" : ""}`}>
+        <div
+          className={`flip-card w-full h-full ${flipped ? "is-flipped" : ""}`}
+          onClick={() => flipped && setZoomed(true)}
+          role={flipped ? "button" : undefined}
+          tabIndex={flipped ? 0 : undefined}
+          aria-label={flipped ? `Enlarge ${drawn.card.name}` : undefined}
+          onKeyDown={(e) => {
+            if (flipped && (e.key === "Enter" || e.key === " ")) {
+              e.preventDefault();
+              setZoomed(true);
+            }
+          }}
+        >
           <div className="flip-face flip-face-front shadow-[0_18px_36px_-14px_rgba(5,2,16,0.7)]">
             <Image
               src="/cards/card-back.svg"
@@ -41,7 +55,7 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
           </div>
           <div
             className={`flip-face flip-face-back shadow-[0_18px_36px_-14px_rgba(5,2,16,0.7)] ${
-              flipped ? "glow-gold" : ""
+              flipped ? "glow-gold cursor-zoom-in" : ""
             }`}
           >
             <div className="relative w-full h-full bg-midnight-deep">
@@ -72,6 +86,7 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
           </span>
         </div>
       )}
+      {zoomed && <CardZoomOverlay drawn={drawn} onClose={() => setZoomed(false)} />}
     </div>
   );
 }
