@@ -1,0 +1,782 @@
+[
+  {
+    "id": "fool",
+    "name": "The Fool",
+    "arcana": "major",
+    "suit": null,
+    "number": 0,
+    "upright_meaning": "New beginnings, spontaneity, a leap of faith, innocence, and unlimited potential.",
+    "reversed_meaning": "Recklessness, naivety, poor judgment, hesitancy, and being taken advantage of.",
+    "image": "/cards/fool.jpg"
+  },
+  {
+    "id": "magician",
+    "name": "The Magician",
+    "arcana": "major",
+    "suit": null,
+    "number": 1,
+    "upright_meaning": "Manifestation, resourcefulness, willpower, and having the tools to act.",
+    "reversed_meaning": "Manipulation, poor planning, untapped talents, and deception.",
+    "image": "/cards/magician.jpg"
+  },
+  {
+    "id": "high-priestess",
+    "name": "The High Priestess",
+    "arcana": "major",
+    "suit": null,
+    "number": 2,
+    "upright_meaning": "Intuition, sacred knowledge, mystery, and the subconscious mind.",
+    "reversed_meaning": "Secrets withheld, disconnection from intuition, and surface-level knowledge.",
+    "image": "/cards/high-priestess.jpg"
+  },
+  {
+    "id": "empress",
+    "name": "The Empress",
+    "arcana": "major",
+    "suit": null,
+    "number": 3,
+    "upright_meaning": "Abundance, nurturing, fertility, and connection to nature.",
+    "reversed_meaning": "Creative block, dependence, neglect, and smothering.",
+    "image": "/cards/empress.jpg"
+  },
+  {
+    "id": "emperor",
+    "name": "The Emperor",
+    "arcana": "major",
+    "suit": null,
+    "number": 4,
+    "upright_meaning": "Authority, structure, control, and fatherly stability.",
+    "reversed_meaning": "Domination, rigidity, excessive control, and lack of discipline.",
+    "image": "/cards/emperor.jpg"
+  },
+  {
+    "id": "hierophant",
+    "name": "The Hierophant",
+    "arcana": "major",
+    "suit": null,
+    "number": 5,
+    "upright_meaning": "Tradition, spiritual guidance, conformity, and institutions.",
+    "reversed_meaning": "Rebellion, unconventionality, breaking with tradition.",
+    "image": "/cards/hierophant.jpg"
+  },
+  {
+    "id": "lovers",
+    "name": "The Lovers",
+    "arcana": "major",
+    "suit": null,
+    "number": 6,
+    "upright_meaning": "Love, harmony, alignment of values, and meaningful choices.",
+    "reversed_meaning": "Disharmony, misalignment of values, and difficult choices.",
+    "image": "/cards/lovers.jpg"
+  },
+  {
+    "id": "chariot",
+    "name": "The Chariot",
+    "arcana": "major",
+    "suit": null,
+    "number": 7,
+    "upright_meaning": "Willpower, determination, victory, and control through focus.",
+    "reversed_meaning": "Lack of direction, aggression, and loss of control.",
+    "image": "/cards/chariot.jpg"
+  },
+  {
+    "id": "strength",
+    "name": "Strength",
+    "arcana": "major",
+    "suit": null,
+    "number": 8,
+    "upright_meaning": "Courage, compassion, inner strength, and patience.",
+    "reversed_meaning": "Self-doubt, weakness, insecurity, and lack of self-discipline.",
+    "image": "/cards/strength.jpg"
+  },
+  {
+    "id": "hermit",
+    "name": "The Hermit",
+    "arcana": "major",
+    "suit": null,
+    "number": 9,
+    "upright_meaning": "Introspection, solitude, inner guidance, and soul-searching.",
+    "reversed_meaning": "Isolation, loneliness, withdrawal, and avoidance.",
+    "image": "/cards/hermit.jpg"
+  },
+  {
+    "id": "wheel-of-fortune",
+    "name": "Wheel of Fortune",
+    "arcana": "major",
+    "suit": null,
+    "number": 10,
+    "upright_meaning": "Cycles, fate, turning points, and unexpected change.",
+    "reversed_meaning": "Bad luck, resistance to change, and breaking negative cycles.",
+    "image": "/cards/wheel-of-fortune.jpg"
+  },
+  {
+    "id": "justice",
+    "name": "Justice",
+    "arcana": "major",
+    "suit": null,
+    "number": 11,
+    "upright_meaning": "Fairness, truth, cause and effect, and accountability.",
+    "reversed_meaning": "Unfairness, dishonesty, avoiding accountability, and imbalance.",
+    "image": "/cards/justice.jpg"
+  },
+  {
+    "id": "hanged-man",
+    "name": "The Hanged Man",
+    "arcana": "major",
+    "suit": null,
+    "number": 12,
+    "upright_meaning": "Surrender, letting go, new perspectives, and pause.",
+    "reversed_meaning": "Stalling, resistance, needless sacrifice, and indecision.",
+    "image": "/cards/hanged-man.jpg"
+  },
+  {
+    "id": "death",
+    "name": "Death",
+    "arcana": "major",
+    "suit": null,
+    "number": 13,
+    "upright_meaning": "Endings, transformation, transition, and letting go of the old.",
+    "reversed_meaning": "Resistance to change, stagnation, and fear of endings.",
+    "image": "/cards/death.jpg"
+  },
+  {
+    "id": "temperance",
+    "name": "Temperance",
+    "arcana": "major",
+    "suit": null,
+    "number": 14,
+    "upright_meaning": "Balance, moderation, patience, and blending opposites.",
+    "reversed_meaning": "Imbalance, excess, impatience, and lack of harmony.",
+    "image": "/cards/temperance.jpg"
+  },
+  {
+    "id": "devil",
+    "name": "The Devil",
+    "arcana": "major",
+    "suit": null,
+    "number": 15,
+    "upright_meaning": "Bondage, addiction, materialism, and unhealthy attachments.",
+    "reversed_meaning": "Breaking free, reclaiming power, and releasing negative patterns.",
+    "image": "/cards/devil.jpg"
+  },
+  {
+    "id": "tower",
+    "name": "The Tower",
+    "arcana": "major",
+    "suit": null,
+    "number": 16,
+    "upright_meaning": "Sudden upheaval, revelation, and destruction of false structures.",
+    "reversed_meaning": "Averting disaster, delayed disruption, and fear of change.",
+    "image": "/cards/tower.jpg"
+  },
+  {
+    "id": "star",
+    "name": "The Star",
+    "arcana": "major",
+    "suit": null,
+    "number": 17,
+    "upright_meaning": "Hope, faith, renewal, and inspiration.",
+    "reversed_meaning": "Despair, self-doubt, disconnection, and loss of faith.",
+    "image": "/cards/star.jpg"
+  },
+  {
+    "id": "moon",
+    "name": "The Moon",
+    "arcana": "major",
+    "suit": null,
+    "number": 18,
+    "upright_meaning": "Illusion, intuition, subconscious fears, and uncertainty.",
+    "reversed_meaning": "Confusion released, repressed emotion surfacing, and clarity returning.",
+    "image": "/cards/moon.jpg"
+  },
+  {
+    "id": "sun",
+    "name": "The Sun",
+    "arcana": "major",
+    "suit": null,
+    "number": 19,
+    "upright_meaning": "Joy, success, vitality, and positivity.",
+    "reversed_meaning": "Temporary sadness, unrealistic expectations, and inner clarity delayed.",
+    "image": "/cards/sun.jpg"
+  },
+  {
+    "id": "judgement",
+    "name": "Judgement",
+    "arcana": "major",
+    "suit": null,
+    "number": 20,
+    "upright_meaning": "Reflection, reckoning, awakening, and rebirth.",
+    "reversed_meaning": "Self-doubt, harsh self-judgment, and ignoring a call to change.",
+    "image": "/cards/judgement.jpg"
+  },
+  {
+    "id": "world",
+    "name": "The World",
+    "arcana": "major",
+    "suit": null,
+    "number": 21,
+    "upright_meaning": "Completion, fulfillment, wholeness, and accomplishment.",
+    "reversed_meaning": "Incompletion, delays, and lack of closure.",
+    "image": "/cards/world.jpg"
+  },
+  {
+    "id": "wands-10",
+    "name": "Ten of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 10,
+    "upright_meaning": "Burden, responsibility, and being overloaded.",
+    "reversed_meaning": "Delegation, releasing burdens, and burnout.",
+    "image": "/cards/wands-10.jpg"
+  },
+  {
+    "id": "wands-ace",
+    "name": "Ace of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 1,
+    "upright_meaning": "A spark of inspiration, new creative energy, and potential.",
+    "reversed_meaning": "Delays, lack of motivation, and creative blocks.",
+    "image": "/cards/wands-ace.jpg"
+  },
+  {
+    "id": "wands-02",
+    "name": "Two of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 2,
+    "upright_meaning": "Planning ahead, making decisions, and weighing options for the future.",
+    "reversed_meaning": "Fear of change, playing it safe, and lack of planning.",
+    "image": "/cards/wands-02.jpg"
+  },
+  {
+    "id": "wands-03",
+    "name": "Three of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 3,
+    "upright_meaning": "Expansion, foresight, and awaiting results of effort.",
+    "reversed_meaning": "Delays, lack of foresight, and unexpected setbacks.",
+    "image": "/cards/wands-03.jpg"
+  },
+  {
+    "id": "wands-04",
+    "name": "Four of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 4,
+    "upright_meaning": "Celebration, homecoming, and community harmony.",
+    "reversed_meaning": "Instability at home, lack of support, and canceled celebrations.",
+    "image": "/cards/wands-04.jpg"
+  },
+  {
+    "id": "wands-05",
+    "name": "Five of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 5,
+    "upright_meaning": "Conflict, competition, and creative tension.",
+    "reversed_meaning": "Avoiding conflict, inner turmoil, and unresolved tension.",
+    "image": "/cards/wands-05.jpg"
+  },
+  {
+    "id": "wands-06",
+    "name": "Six of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 6,
+    "upright_meaning": "Victory, public recognition, and self-confidence.",
+    "reversed_meaning": "Ego, lack of recognition, and delayed success.",
+    "image": "/cards/wands-06.jpg"
+  },
+  {
+    "id": "wands-07",
+    "name": "Seven of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 7,
+    "upright_meaning": "Perseverance, defending one's position, and standing ground.",
+    "reversed_meaning": "Overwhelm, giving up, and feeling attacked.",
+    "image": "/cards/wands-07.jpg"
+  },
+  {
+    "id": "wands-08",
+    "name": "Eight of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 8,
+    "upright_meaning": "Swift action, rapid movement, and alignment.",
+    "reversed_meaning": "Delays, frustration, and slowing down.",
+    "image": "/cards/wands-08.jpg"
+  },
+  {
+    "id": "wands-09",
+    "name": "Nine of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 9,
+    "upright_meaning": "Resilience, persistence, and last stretch of effort.",
+    "reversed_meaning": "Exhaustion, defensiveness, and giving up close to the end.",
+    "image": "/cards/wands-09.jpg"
+  },
+  {
+    "id": "wands-page",
+    "name": "Page of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 11,
+    "upright_meaning": "Enthusiasm, exploration, and a free spirit with new ideas.",
+    "reversed_meaning": "Lack of direction, procrastination, and unrealistic plans.",
+    "image": "/cards/wands-page.jpg"
+  },
+  {
+    "id": "wands-knight",
+    "name": "Knight of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 12,
+    "upright_meaning": "Energy, passion, and impulsive action.",
+    "reversed_meaning": "Recklessness, haste, and scattered energy.",
+    "image": "/cards/wands-knight.jpg"
+  },
+  {
+    "id": "wands-queen",
+    "name": "Queen of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 13,
+    "upright_meaning": "Confidence, independence, and vibrant determination.",
+    "reversed_meaning": "Insecurity, jealousy, and demanding energy.",
+    "image": "/cards/wands-queen.jpg"
+  },
+  {
+    "id": "wands-king",
+    "name": "King of Wands",
+    "arcana": "minor",
+    "suit": "wands",
+    "number": 14,
+    "upright_meaning": "Bold leadership, vision, and entrepreneurial spirit.",
+    "reversed_meaning": "Impulsiveness, ruthlessness, and overbearing pride.",
+    "image": "/cards/wands-king.jpg"
+  },
+  {
+    "id": "cups-10",
+    "name": "Ten of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 10,
+    "upright_meaning": "Emotional fulfillment, harmony, and lasting happiness.",
+    "reversed_meaning": "Broken family, disconnection, and unfulfilled expectations.",
+    "image": "/cards/cups-10.jpg"
+  },
+  {
+    "id": "cups-ace",
+    "name": "Ace of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 1,
+    "upright_meaning": "New emotions, love, and spiritual or creative fulfillment.",
+    "reversed_meaning": "Emotional loss, blocked feelings, and emptiness.",
+    "image": "/cards/cups-ace.jpg"
+  },
+  {
+    "id": "cups-02",
+    "name": "Two of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 2,
+    "upright_meaning": "Partnership, mutual attraction, and connection.",
+    "reversed_meaning": "Imbalance in a relationship, tension, and miscommunication.",
+    "image": "/cards/cups-02.jpg"
+  },
+  {
+    "id": "cups-03",
+    "name": "Three of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 3,
+    "upright_meaning": "Friendship, celebration, and community joy.",
+    "reversed_meaning": "Overindulgence, gossip, and isolation from friends.",
+    "image": "/cards/cups-03.jpg"
+  },
+  {
+    "id": "cups-04",
+    "name": "Four of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 4,
+    "upright_meaning": "Contemplation, apathy, and reevaluating what matters.",
+    "reversed_meaning": "Renewed motivation, missed opportunities, and boredom passing.",
+    "image": "/cards/cups-04.jpg"
+  },
+  {
+    "id": "cups-05",
+    "name": "Five of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 5,
+    "upright_meaning": "Loss, grief, and focusing on regret.",
+    "reversed_meaning": "Acceptance, moving on, and finding peace after loss.",
+    "image": "/cards/cups-05.jpg"
+  },
+  {
+    "id": "cups-06",
+    "name": "Six of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 6,
+    "upright_meaning": "Nostalgia, childhood memories, and innocent joy.",
+    "reversed_meaning": "Living in the past, unrealistic nostalgia, and moving forward.",
+    "image": "/cards/cups-06.jpg"
+  },
+  {
+    "id": "cups-07",
+    "name": "Seven of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 7,
+    "upright_meaning": "Choices, fantasy, and wishful thinking.",
+    "reversed_meaning": "Clarity, focused choices, and overcoming illusions.",
+    "image": "/cards/cups-07.jpg"
+  },
+  {
+    "id": "cups-08",
+    "name": "Eight of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 8,
+    "upright_meaning": "Walking away, seeking deeper meaning, and disillusionment.",
+    "reversed_meaning": "Fear of moving on, stagnation, and avoidance.",
+    "image": "/cards/cups-08.jpg"
+  },
+  {
+    "id": "cups-09",
+    "name": "Nine of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 9,
+    "upright_meaning": "Satisfaction, emotional contentment, and wishes fulfilled.",
+    "reversed_meaning": "Overindulgence, complacency, and unfulfilled desires.",
+    "image": "/cards/cups-09.jpg"
+  },
+  {
+    "id": "cups-page",
+    "name": "Page of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 11,
+    "upright_meaning": "Emotional openness, creative messages, and curiosity.",
+    "reversed_meaning": "Emotional immaturity, insecurity, and unrealistic ideas.",
+    "image": "/cards/cups-page.jpg"
+  },
+  {
+    "id": "cups-knight",
+    "name": "Knight of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 12,
+    "upright_meaning": "Romance, charm, and following the heart.",
+    "reversed_meaning": "Moodiness, unrealistic idealism, and disappointment.",
+    "image": "/cards/cups-knight.jpg"
+  },
+  {
+    "id": "cups-queen",
+    "name": "Queen of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 13,
+    "upright_meaning": "Compassion, emotional security, and intuitive care.",
+    "reversed_meaning": "Emotional insecurity, moodiness, and overwhelm.",
+    "image": "/cards/cups-queen.jpg"
+  },
+  {
+    "id": "cups-king",
+    "name": "King of Cups",
+    "arcana": "minor",
+    "suit": "cups",
+    "number": 14,
+    "upright_meaning": "Emotional balance, diplomacy, and calm wisdom.",
+    "reversed_meaning": "Emotional manipulation, moodiness, and volatility.",
+    "image": "/cards/cups-king.jpg"
+  },
+  {
+    "id": "swords-10",
+    "name": "Ten of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 10,
+    "upright_meaning": "Painful endings, betrayal, and rock bottom.",
+    "reversed_meaning": "Recovery, resilience, and gradual healing.",
+    "image": "/cards/swords-10.jpg"
+  },
+  {
+    "id": "swords-ace",
+    "name": "Ace of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 1,
+    "upright_meaning": "Clarity, breakthrough, and new mental focus.",
+    "reversed_meaning": "Confusion, miscommunication, and clouded judgment.",
+    "image": "/cards/swords-ace.jpg"
+  },
+  {
+    "id": "swords-02",
+    "name": "Two of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 2,
+    "upright_meaning": "Difficult choices, stalemate, and weighing decisions.",
+    "reversed_meaning": "Indecision, information overload, and avoiding truth.",
+    "image": "/cards/swords-02.jpg"
+  },
+  {
+    "id": "swords-03",
+    "name": "Three of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 3,
+    "upright_meaning": "Heartbreak, grief, and painful truths.",
+    "reversed_meaning": "Healing, forgiveness, and moving past pain.",
+    "image": "/cards/swords-03.jpg"
+  },
+  {
+    "id": "swords-04",
+    "name": "Four of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 4,
+    "upright_meaning": "Rest, recovery, and mental stillness.",
+    "reversed_meaning": "Restlessness, burnout, and resisting rest.",
+    "image": "/cards/swords-04.jpg"
+  },
+  {
+    "id": "swords-05",
+    "name": "Five of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 5,
+    "upright_meaning": "Conflict, win-at-all-costs, and tension.",
+    "reversed_meaning": "Reconciliation, releasing resentment, and moving on from conflict.",
+    "image": "/cards/swords-05.jpg"
+  },
+  {
+    "id": "swords-06",
+    "name": "Six of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 6,
+    "upright_meaning": "Transition, moving on, and leaving hardship behind.",
+    "reversed_meaning": "Resistance to change, unresolved issues, and stuck in turmoil.",
+    "image": "/cards/swords-06.jpg"
+  },
+  {
+    "id": "swords-07",
+    "name": "Seven of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 7,
+    "upright_meaning": "Deception, strategy, and acting alone.",
+    "reversed_meaning": "Coming clean, facing consequences, and self-deceit revealed.",
+    "image": "/cards/swords-07.jpg"
+  },
+  {
+    "id": "swords-08",
+    "name": "Eight of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 8,
+    "upright_meaning": "Restriction, self-imposed limitation, and feeling trapped.",
+    "reversed_meaning": "Release, new perspective, and empowerment.",
+    "image": "/cards/swords-08.jpg"
+  },
+  {
+    "id": "swords-09",
+    "name": "Nine of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 9,
+    "upright_meaning": "Anxiety, worry, and mental anguish.",
+    "reversed_meaning": "Hope returning, releasing fear, and inner peace.",
+    "image": "/cards/swords-09.jpg"
+  },
+  {
+    "id": "swords-page",
+    "name": "Page of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 11,
+    "upright_meaning": "Curiosity, mental energy, and seeking truth.",
+    "reversed_meaning": "Gossip, scattered thoughts, and all talk no action.",
+    "image": "/cards/swords-page.jpg"
+  },
+  {
+    "id": "swords-knight",
+    "name": "Knight of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 12,
+    "upright_meaning": "Ambition, fast action, and direct communication.",
+    "reversed_meaning": "Recklessness, impulsiveness, and burnout.",
+    "image": "/cards/swords-knight.jpg"
+  },
+  {
+    "id": "swords-queen",
+    "name": "Queen of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 13,
+    "upright_meaning": "Independent thinking, clear boundaries, and honesty.",
+    "reversed_meaning": "Coldness, bitterness, and overly critical judgment.",
+    "image": "/cards/swords-queen.jpg"
+  },
+  {
+    "id": "swords-king",
+    "name": "King of Swords",
+    "arcana": "minor",
+    "suit": "swords",
+    "number": 14,
+    "upright_meaning": "Clear judgment, authority, and intellectual power.",
+    "reversed_meaning": "Manipulation, abuse of power, and harsh judgment.",
+    "image": "/cards/swords-king.jpg"
+  },
+  {
+    "id": "pentacles-10",
+    "name": "Ten of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 10,
+    "upright_meaning": "Legacy, long-term success, and family wealth.",
+    "reversed_meaning": "Financial loss, family disputes, and instability.",
+    "image": "/cards/pentacles-10.jpg"
+  },
+  {
+    "id": "pentacles-ace",
+    "name": "Ace of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 1,
+    "upright_meaning": "New opportunity, prosperity, and manifestation.",
+    "reversed_meaning": "Missed opportunity, lack of planning, and scarcity mindset.",
+    "image": "/cards/pentacles-ace.jpg"
+  },
+  {
+    "id": "pentacles-02",
+    "name": "Two of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 2,
+    "upright_meaning": "Balance, adaptability, and juggling priorities.",
+    "reversed_meaning": "Overwhelm, disorganization, and overextending resources.",
+    "image": "/cards/pentacles-02.jpg"
+  },
+  {
+    "id": "pentacles-03",
+    "name": "Three of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 3,
+    "upright_meaning": "Collaboration, skill, and teamwork toward a goal.",
+    "reversed_meaning": "Lack of teamwork, misalignment, and poor workmanship.",
+    "image": "/cards/pentacles-03.jpg"
+  },
+  {
+    "id": "pentacles-04",
+    "name": "Four of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 4,
+    "upright_meaning": "Security, saving, and holding onto resources.",
+    "reversed_meaning": "Greed, materialism, and fear of loss.",
+    "image": "/cards/pentacles-04.jpg"
+  },
+  {
+    "id": "pentacles-05",
+    "name": "Five of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 5,
+    "upright_meaning": "Hardship, financial loss, and feeling left out in the cold.",
+    "reversed_meaning": "Recovery, finding support, and improving circumstances.",
+    "image": "/cards/pentacles-05.jpg"
+  },
+  {
+    "id": "pentacles-06",
+    "name": "Six of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 6,
+    "upright_meaning": "Generosity, giving and receiving, and charity.",
+    "reversed_meaning": "Strings attached, debt, and imbalance of power.",
+    "image": "/cards/pentacles-06.jpg"
+  },
+  {
+    "id": "pentacles-07",
+    "name": "Seven of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 7,
+    "upright_meaning": "Patience, long-term investment, and assessment of progress.",
+    "reversed_meaning": "Impatience, lack of reward, and reevaluating effort.",
+    "image": "/cards/pentacles-07.jpg"
+  },
+  {
+    "id": "pentacles-08",
+    "name": "Eight of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 8,
+    "upright_meaning": "Diligence, mastery, and dedication to craft.",
+    "reversed_meaning": "Perfectionism, lack of focus, and mediocrity.",
+    "image": "/cards/pentacles-08.jpg"
+  },
+  {
+    "id": "pentacles-09",
+    "name": "Nine of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 9,
+    "upright_meaning": "Independence, luxury, and self-sufficiency.",
+    "reversed_meaning": "Overwork, isolation, and superficial success.",
+    "image": "/cards/pentacles-09.jpg"
+  },
+  {
+    "id": "pentacles-page",
+    "name": "Page of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 11,
+    "upright_meaning": "New opportunity, studiousness, and manifestation in progress.",
+    "reversed_meaning": "Lack of progress, procrastination, and unrealistic goals.",
+    "image": "/cards/pentacles-page.jpg"
+  },
+  {
+    "id": "pentacles-knight",
+    "name": "Knight of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 12,
+    "upright_meaning": "Reliability, hard work, and methodical progress.",
+    "reversed_meaning": "Laziness, stagnation, and boredom with routine.",
+    "image": "/cards/pentacles-knight.jpg"
+  },
+  {
+    "id": "pentacles-queen",
+    "name": "Queen of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 13,
+    "upright_meaning": "Practicality, nurturing, and down-to-earth resourcefulness.",
+    "reversed_meaning": "Self-centeredness, imbalance, and neglecting responsibilities.",
+    "image": "/cards/pentacles-queen.jpg"
+  },
+  {
+    "id": "pentacles-king",
+    "name": "King of Pentacles",
+    "arcana": "minor",
+    "suit": "pentacles",
+    "number": 14,
+    "upright_meaning": "Abundance, security, and disciplined leadership.",
+    "reversed_meaning": "Materialism, stubbornness, and poor financial decisions.",
+    "image": "/cards/pentacles-king.jpg"
+  }
+]
