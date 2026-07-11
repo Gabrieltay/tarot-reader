@@ -139,10 +139,8 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="w-full overflow-x-auto pb-2">
-            <div className="min-w-fit mx-auto px-2">
-              <SpreadLayout spreadId={spreadId} cards={drawnCards} />
-            </div>
+          <div className="w-full px-2">
+            <SpreadLayout spreadId={spreadId} cards={drawnCards} />
           </div>
 
           <Interpretation

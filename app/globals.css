@@ -53,6 +53,7 @@ body {
   color: var(--color-warm-white);
   font-family: var(--font-sans), -apple-system, "SF Pro Text", Arial, sans-serif;
   min-height: 100vh;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 

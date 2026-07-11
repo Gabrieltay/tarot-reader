@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { InterpretRequest } from "@/types/tarot";
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
 function buildPrompt({ question, spread, cards }: InterpretRequest): string {
   const cardLines = cards

@@ -27,7 +27,7 @@ Open [http://localhost:3000](http://localhost:3000).
 | Variable | Required | Description |
 | --- | --- | --- |
 | `GEMINI_API_KEY` | Yes | API key for the Gemini Flash API, used server-side in `/app/api/interpret`. Get one at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). |
-| `GEMINI_MODEL` | No | Overrides the Gemini model (defaults to `gemini-2.5-flash`). |
+| `GEMINI_MODEL` | No | Overrides the Gemini model (defaults to `gemini-3.5-flash`). |
 
 Without `GEMINI_API_KEY` set, the app still runs and cards can be drawn — only the interpretation step will show an error.
 
