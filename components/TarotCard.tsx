@@ -21,8 +21,8 @@ export default function TarotCard({ drawn, delayMs = 0, showLabel = true }: Taro
   return (
     <div className="flex flex-col items-center gap-3 w-full">
       {showLabel && (
-        <div className="text-center px-0.5">
-          <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.03em] sm:tracking-[0.18em] text-gold-soft/80 font-sans font-medium break-words">
+        <div className="text-center px-0.5 w-full">
+          <div className="text-[10px] sm:text-[11px] uppercase tracking-[0.03em] sm:tracking-[0.18em] text-gold-soft/80 font-sans font-medium break-words leading-tight min-h-[2.4em] flex items-center justify-center">
             {drawn.position.label}
           </div>
         </div>
