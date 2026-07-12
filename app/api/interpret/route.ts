@@ -43,6 +43,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  console.log(
+    `[question-submitted] ${new Date().toISOString()} spread="${body.spread}" question="${body.question}"`
+  );
+
   const prompt = buildPrompt(body);
 
   try {
