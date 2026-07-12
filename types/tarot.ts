@@ -64,7 +64,6 @@ export interface ContextReadingSummary {
 
 export interface InterpretRequest {
   question: string;
-  category: ReadingCategory | null;
   spread: string;
   cards: InterpretRequestCard[];
   contextReadings: ContextReadingSummary[];
@@ -72,6 +71,7 @@ export interface InterpretRequest {
 
 export interface InterpretResponse {
   interpretation: string;
+  category: ReadingCategory | null;
 }
 
 export interface JournalEntry {
