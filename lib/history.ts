@@ -1,17 +1,7 @@
 import { useSyncExternalStore } from "react";
-import {
-  AppSettings,
-  ConversationTurn,
-  JournalEntry,
-  SavedReading,
-} from "@/types/tarot";
+import { JournalEntry, SavedReading } from "@/types/tarot";
 
 const HISTORY_KEY = "tarot-reader:history:v1";
-const SETTINGS_KEY = "tarot-reader:settings:v1";
-
-const DEFAULT_SETTINGS: AppSettings = {
-  contextualEnabled: true,
-};
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";
@@ -25,11 +15,9 @@ function isBrowser(): boolean {
  */
 const storeListeners = new Set<() => void>();
 let cachedHistorySnapshot: SavedReading[] | null = null;
-let cachedSettingsSnapshot: AppSettings | null = null;
 
 function notifyStoreChange(): void {
   cachedHistorySnapshot = null;
-  cachedSettingsSnapshot = null;
   storeListeners.forEach((listener) => listener());
 }
 
@@ -37,9 +25,7 @@ function subscribeToStore(listener: () => void): () => void {
   storeListeners.add(listener);
   if (!isBrowser()) return () => storeListeners.delete(listener);
   const onStorage = (e: StorageEvent) => {
-    if (e.key === HISTORY_KEY || e.key === SETTINGS_KEY || e.key === null) {
-      notifyStoreChange();
-    }
+    if (e.key === HISTORY_KEY || e.key === null) notifyStoreChange();
   };
   window.addEventListener("storage", onStorage);
   return () => {
@@ -128,42 +114,6 @@ export function deleteJournalEntry(readingId: string, entryId: string): void {
   }));
 }
 
-export function addConversationTurn(
-  readingId: string,
-  turn: Omit<ConversationTurn, "id" | "createdAt">
-): ConversationTurn | undefined {
-  const fullTurn: ConversationTurn = {
-    ...turn,
-    id: generateId(),
-    createdAt: new Date().toISOString(),
-  };
-  const updated = updateReading(readingId, (reading) => ({
-    ...reading,
-    conversation: [...reading.conversation, fullTurn],
-  }));
-  return updated ? fullTurn : undefined;
-}
-
-export function getSettings(): AppSettings {
-  if (!isBrowser()) return DEFAULT_SETTINGS;
-  try {
-    const raw = window.localStorage.getItem(SETTINGS_KEY);
-    if (!raw) return DEFAULT_SETTINGS;
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-  } catch {
-    return DEFAULT_SETTINGS;
-  }
-}
-
-export function updateSettings(partial: Partial<AppSettings>): AppSettings {
-  const next = { ...getSettings(), ...partial };
-  if (isBrowser()) {
-    window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
-    notifyStoreChange();
-  }
-  return next;
-}
-
 function getHistorySnapshot(): SavedReading[] {
   if (cachedHistorySnapshot === null) cachedHistorySnapshot = getHistory();
   return cachedHistorySnapshot;
@@ -175,23 +125,9 @@ function getHistoryServerSnapshot(): SavedReading[] {
   return EMPTY_HISTORY;
 }
 
-function getSettingsSnapshot(): AppSettings {
-  if (cachedSettingsSnapshot === null) cachedSettingsSnapshot = getSettings();
-  return cachedSettingsSnapshot;
-}
-
-function getSettingsServerSnapshot(): AppSettings {
-  return DEFAULT_SETTINGS;
-}
-
 /** Live-updating view of saved readings; re-renders on any local mutation or cross-tab change. */
 export function useHistory(): SavedReading[] {
   return useSyncExternalStore(subscribeToStore, getHistorySnapshot, getHistoryServerSnapshot);
-}
-
-/** Live-updating view of app settings (e.g. contextualEnabled). */
-export function useSettings(): AppSettings {
-  return useSyncExternalStore(subscribeToStore, getSettingsSnapshot, getSettingsServerSnapshot);
 }
 
 /** Live-updating single reading lookup, kept in sync with useHistory's snapshot. */

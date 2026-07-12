@@ -64,7 +64,7 @@ const READING_SCHEMA = {
   ],
 };
 
-function buildPrompt({ question, category, spread, cards, mode, contextReadings }: InterpretRequest): string {
+function buildPrompt({ question, category, spread, cards, contextReadings }: InterpretRequest): string {
   const cardLines = cards
     .map((c, i) => {
       return `${i + 1}. Position: ${c.position} — ${c.name} (${c.orientation}), ${c.arcana} arcana${c.suit ? `, suit of ${c.suit}` : ""}\n   Traditional meaning: ${c.meaning}`;
@@ -72,8 +72,8 @@ function buildPrompt({ question, category, spread, cards, mode, contextReadings 
     .join("\n");
 
   const contextSection =
-    mode === "contextual" && contextReadings.length > 0
-      ? `\nThe seeker has consented to contextual readings. Here are their most relevant previous readings, already filtered for relevance — use them only if they genuinely enrich this reading (recurring cards, similar questions, recurring themes, or visible personal growth). Do not force a connection if one isn't meaningful; in that case set connectionToPast to null.\n\n${contextReadings
+    contextReadings.length > 0
+      ? `\nHere are the seeker's previous readings judged most relevant to this one — use them only if they genuinely enrich this reading (recurring cards, similar questions, recurring themes, or visible personal growth). Do not force a connection if one isn't meaningful; in that case set connectionToPast to null.\n\n${contextReadings
           .map(
             (r, i) =>
               `${i + 1}. ${new Date(r.createdAt).toLocaleDateString()} — Question: "${r.question}"${r.category ? ` (${r.category})` : ""}, Spread: ${r.spreadName}, Cards: ${r.cardNames.join(", ")}\n   Key message then: ${r.keyMessage}`
@@ -143,12 +143,11 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  const mode = body.mode === "contextual" ? "contextual" : "quick";
   const contextReadings = Array.isArray(body.contextReadings) ? body.contextReadings : [];
-  const normalizedBody: InterpretRequest = { ...body, mode, contextReadings };
+  const normalizedBody: InterpretRequest = { ...body, contextReadings };
 
   console.log(
-    `[question-submitted] ${new Date().toISOString()} mode="${mode}" category="${body.category ?? ""}" spread="${body.spread}" question="${body.question}"`
+    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} category="${body.category ?? ""}" spread="${body.spread}" question="${body.question}"`
   );
 
   const prompt = buildPrompt(normalizedBody);

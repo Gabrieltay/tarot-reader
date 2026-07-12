@@ -27,12 +27,6 @@ export default function HistoryCard({ reading, onDelete }: HistoryCardProps) {
               <span>{CATEGORY_LABELS[reading.category]}</span>
             </>
           )}
-          {reading.mode === "contextual" && (
-            <>
-              <span className="text-ink-soft/40">·</span>
-              <span className="text-gold-deep">Contextual</span>
-            </>
-          )}
         </div>
         <button
           type="button"

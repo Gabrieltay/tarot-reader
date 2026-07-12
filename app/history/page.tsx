@@ -6,18 +6,11 @@ import HistoryCard from "@/components/history/HistoryCard";
 import HistoryFilters, { SortOrder } from "@/components/history/HistoryFilters";
 import PatternInsightsPanel from "@/components/history/PatternInsightsPanel";
 import IvoryPanel from "@/components/IvoryPanel";
-import {
-  clearHistory,
-  deleteReading,
-  updateSettings,
-  useHistory,
-  useSettings,
-} from "@/lib/history";
+import { clearHistory, deleteReading, useHistory } from "@/lib/history";
 import { ReadingCategory, SpreadId } from "@/types/tarot";
 
 export default function HistoryPage() {
   const history = useHistory();
-  const contextualEnabled = useSettings().contextualEnabled;
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState<ReadingCategory | "all">("all");
   const [spreadId, setSpreadId] = useState<SpreadId | "all">("all");
@@ -35,10 +28,6 @@ export default function HistoryPage() {
     }
     clearHistory();
     setConfirmingClear(false);
-  };
-
-  const handleToggleContextual = (enabled: boolean) => {
-    updateSettings({ contextualEnabled: enabled });
   };
 
   const filtered = useMemo(() => {
@@ -76,38 +65,27 @@ export default function HistoryPage() {
         </div>
 
         <IvoryPanel>
-          <div className="flex flex-col gap-3">
-            <p className="text-sm text-ink-soft font-sans leading-relaxed">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-ink-soft font-sans leading-relaxed max-w-md">
               Your reading history lives only in this browser, on this device. It is
-              never uploaded anywhere, and you decide what stays and what goes.
+              never uploaded anywhere. New readings quietly draw on relevant past
+              readings only when they genuinely apply — you decide what stays and
+              what goes.
             </p>
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <label className="flex items-center gap-2 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={contextualEnabled}
-                  onChange={(e) => handleToggleContextual(e.target.checked)}
-                  className="h-4 w-4 accent-gold-deep cursor-pointer"
-                />
-                <span className="text-sm text-ink font-sans">
-                  Allow contextual readings to reference relevant past readings
-                </span>
-              </label>
-              {history.length > 0 && (
-                <button
-                  type="button"
-                  onClick={handleClearAll}
-                  onBlur={() => setConfirmingClear(false)}
-                  className={`text-xs font-sans px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${
-                    confirmingClear
-                      ? "border-rose text-rose bg-rose/10"
-                      : "border-ink/15 text-ink-soft hover:border-rose/50 hover:text-rose"
-                  }`}
-                >
-                  {confirmingClear ? "Click again to confirm" : "Clear all history"}
-                </button>
-              )}
-            </div>
+            {history.length > 0 && (
+              <button
+                type="button"
+                onClick={handleClearAll}
+                onBlur={() => setConfirmingClear(false)}
+                className={`text-xs font-sans px-3 py-1.5 rounded-full border transition-colors cursor-pointer shrink-0 ${
+                  confirmingClear
+                    ? "border-rose text-rose bg-rose/10"
+                    : "border-ink/15 text-ink-soft hover:border-rose/50 hover:text-rose"
+                }`}
+              >
+                {confirmingClear ? "Click again to confirm" : "Clear all history"}
+              </button>
+            )}
           </div>
         </IvoryPanel>
 

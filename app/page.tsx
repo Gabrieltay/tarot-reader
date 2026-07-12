@@ -5,31 +5,18 @@ import Link from "next/link";
 import QuestionInput from "@/components/QuestionInput";
 import CategorySelector from "@/components/CategorySelector";
 import SpreadSelector from "@/components/SpreadSelector";
-import ModeSelector from "@/components/ModeSelector";
 import SpreadLayout from "@/components/SpreadLayout";
 import Interpretation from "@/components/Interpretation";
 import SaveReadingBar from "@/components/SaveReadingBar";
-import FollowUpChat from "@/components/FollowUpChat";
 import IvoryPanel from "@/components/IvoryPanel";
 import { drawSpread } from "@/lib/draw";
 import { SPREADS } from "@/lib/spreads";
 import { selectRelevantReadings, toContextSummary } from "@/lib/context";
+import { deleteReading, generateId, getHistory, saveReading } from "@/lib/history";
 import {
-  addConversationTurn,
-  deleteReading,
-  generateId,
-  getHistory,
-  saveReading,
-  updateSettings,
-  useHistory,
-  useSettings,
-} from "@/lib/history";
-import {
-  ConversationTurn,
   DrawnCard,
   InterpretRequestCard,
   ReadingCategory,
-  ReadingMode,
   SavedReading,
   SpreadId,
   StructuredReading,
@@ -54,34 +41,25 @@ export default function Home() {
   const [question, setQuestion] = useState("");
   const [category, setCategory] = useState<ReadingCategory | null>(null);
   const [spreadId, setSpreadId] = useState<SpreadId>("single");
-  const [mode, setMode] = useState<ReadingMode>("quick");
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [reading, setReading] = useState<StructuredReading | null>(null);
   const [interpretLoading, setInterpretLoading] = useState(false);
   const [interpretError, setInterpretError] = useState<string | null>(null);
 
-  const contextualEnabled = useSettings().contextualEnabled;
-  const historyCount = useHistory().length;
-
   const [savedReadingId, setSavedReadingId] = useState<string | null>(null);
-  const [conversation, setConversation] = useState<ConversationTurn[]>([]);
-  const [followUpLoading, setFollowUpLoading] = useState(false);
 
   const fetchInterpretation = useCallback(
-    async (q: string, cat: ReadingCategory | null, spread: SpreadId, readingMode: ReadingMode, cards: DrawnCard[]) => {
+    async (q: string, cat: ReadingCategory | null, spread: SpreadId, cards: DrawnCard[]) => {
       setInterpretLoading(true);
       setInterpretError(null);
       setReading(null);
       try {
         const history = getHistory();
-        const contextReadings =
-          readingMode === "contextual"
-            ? selectRelevantReadings(history, {
-                question: q,
-                category: cat,
-                cardNames: cards.map((c) => c.card.name),
-              }).map(toContextSummary)
-            : [];
+        const contextReadings = selectRelevantReadings(history, {
+          question: q,
+          category: cat,
+          cardNames: cards.map((c) => c.card.name),
+        }).map(toContextSummary);
 
         const res = await fetch("/api/interpret", {
           method: "POST",
@@ -91,7 +69,6 @@ export default function Home() {
             category: cat,
             spread: SPREADS[spread].name,
             cards: toRequestCards(cards),
-            mode: readingMode,
             contextReadings,
           }),
         });
@@ -117,9 +94,8 @@ export default function Home() {
     setDrawnCards(drawn);
     setStage("reading");
     setSavedReadingId(null);
-    setConversation([]);
-    fetchInterpretation(question, category, spreadId, mode, drawn);
-  }, [question, category, spreadId, mode, fetchInterpretation]);
+    fetchInterpretation(question, category, spreadId, drawn);
+  }, [question, category, spreadId, fetchInterpretation]);
 
   const handleDrawAgain = useCallback(() => {
     handleDraw();
@@ -131,12 +107,6 @@ export default function Home() {
     setReading(null);
     setInterpretError(null);
     setSavedReadingId(null);
-    setConversation([]);
-  }, []);
-
-  const handleToggleContextualEnabled = useCallback((enabled: boolean) => {
-    updateSettings({ contextualEnabled: enabled });
-    if (!enabled) setMode("quick");
   }, []);
 
   const handleSaveReading = useCallback(() => {
@@ -149,7 +119,6 @@ export default function Home() {
       category,
       spreadId,
       spreadName: SPREADS[spreadId].name,
-      mode,
       cards: drawnCards.map((c) => ({
         cardId: c.card.id,
         name: c.card.name,
@@ -161,71 +130,16 @@ export default function Home() {
       })),
       reading,
       journal: [],
-      conversation,
     };
     saveReading(saved);
     setSavedReadingId(id);
-  }, [reading, question, category, spreadId, mode, drawnCards, conversation]);
+  }, [reading, question, category, spreadId, drawnCards]);
 
   const handleUnsaveReading = useCallback(() => {
     if (!savedReadingId) return;
     deleteReading(savedReadingId);
     setSavedReadingId(null);
   }, [savedReadingId]);
-
-  const handleSendFollowUp = useCallback(
-    async (message: string) => {
-      if (!reading) return;
-      const userTurn: ConversationTurn = {
-        id: generateId(),
-        role: "user",
-        text: message,
-        createdAt: new Date().toISOString(),
-      };
-      setConversation((prev) => [...prev, userTurn]);
-      if (savedReadingId) addConversationTurn(savedReadingId, { role: "user", text: message });
-      setFollowUpLoading(true);
-      try {
-        const res = await fetch("/api/followup", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            question,
-            category,
-            spread: SPREADS[spreadId].name,
-            cards: toRequestCards(drawnCards),
-            reading,
-            conversation: conversation.map((t) => ({ role: t.role, text: t.text })),
-            message,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Something went wrong.");
-        const assistantTurn: ConversationTurn = {
-          id: generateId(),
-          role: "assistant",
-          text: data.reply,
-          createdAt: new Date().toISOString(),
-        };
-        setConversation((prev) => [...prev, assistantTurn]);
-        if (savedReadingId) addConversationTurn(savedReadingId, { role: "assistant", text: data.reply });
-      } catch (err) {
-        const errorTurn: ConversationTurn = {
-          id: generateId(),
-          role: "assistant",
-          text:
-            err instanceof Error
-              ? `I couldn't reach the reader: ${err.message}`
-              : "I couldn't reach the reader. Please try again.",
-          createdAt: new Date().toISOString(),
-        };
-        setConversation((prev) => [...prev, errorTurn]);
-      } finally {
-        setFollowUpLoading(false);
-      }
-    },
-    [reading, question, category, spreadId, drawnCards, conversation, savedReadingId]
-  );
 
   const canDraw = question.trim().length > 0;
 
@@ -275,14 +189,10 @@ export default function Home() {
               <CategorySelector value={category} onChange={setCategory} />
               <div className="gold-divider-soft" />
               <SpreadSelector value={spreadId} onChange={setSpreadId} />
-              <div className="gold-divider-soft" />
-              <ModeSelector
-                value={mode}
-                onChange={setMode}
-                historyCount={historyCount}
-                contextualEnabled={contextualEnabled}
-                onToggleContextualEnabled={handleToggleContextualEnabled}
-              />
+              <p className="text-[11px] text-ink-soft/70 font-sans text-center -mt-4 leading-relaxed">
+                If any of your saved readings are genuinely relevant, they&rsquo;ll quietly
+                inform this one. Nothing leaves this device.
+              </p>
               <button
                 type="button"
                 disabled={!canDraw}
@@ -300,7 +210,7 @@ export default function Home() {
         <div className="w-full flex flex-col items-center gap-12 animate-fade-in-up">
           <div className="text-center max-w-xl flex flex-col items-center gap-3">
             <span className="inline-block rounded-full border border-gold/30 bg-white/[0.04] px-4 py-1.5 text-[11px] uppercase tracking-[0.2em] text-gold-soft/90 font-sans">
-              {SPREADS[spreadId].name} · {mode === "contextual" ? "Contextual" : "Quick"} Reading
+              {SPREADS[spreadId].name}
             </span>
             <p className="font-display text-2xl text-warm-white/95 italic px-4">
               &ldquo;{question}&rdquo;
@@ -327,14 +237,6 @@ export default function Home() {
               saved={savedReadingId !== null}
               onSave={handleSaveReading}
               onUnsave={handleUnsaveReading}
-            />
-          )}
-
-          {reading && !interpretLoading && (
-            <FollowUpChat
-              conversation={conversation}
-              onSend={handleSendFollowUp}
-              loading={followUpLoading}
             />
           )}
 

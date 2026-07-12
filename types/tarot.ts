@@ -51,8 +51,6 @@ export type ReadingCategory =
   | "finances"
   | "health";
 
-export type ReadingMode = "quick" | "contextual";
-
 /** A distilled slice of a past reading, sent to the API as context — never the full history. */
 export interface ContextReadingSummary {
   id: string;
@@ -69,7 +67,6 @@ export interface InterpretRequest {
   category: ReadingCategory | null;
   spread: string;
   cards: InterpretRequestCard[];
-  mode: ReadingMode;
   contextReadings: ContextReadingSummary[];
 }
 
@@ -103,13 +100,6 @@ export interface JournalEntry {
   createdAt: string;
 }
 
-export interface ConversationTurn {
-  id: string;
-  role: "user" | "assistant";
-  text: string;
-  createdAt: string;
-}
-
 export interface SavedReadingCard {
   cardId: string;
   name: string;
@@ -127,27 +117,7 @@ export interface SavedReading {
   category: ReadingCategory | null;
   spreadId: SpreadId;
   spreadName: string;
-  mode: ReadingMode;
   cards: SavedReadingCard[];
   reading: StructuredReading;
   journal: JournalEntry[];
-  conversation: ConversationTurn[];
-}
-
-export interface AppSettings {
-  contextualEnabled: boolean;
-}
-
-export interface FollowUpRequest {
-  question: string;
-  category: ReadingCategory | null;
-  spread: string;
-  cards: InterpretRequestCard[];
-  reading: StructuredReading;
-  conversation: { role: "user" | "assistant"; text: string }[];
-  message: string;
-}
-
-export interface FollowUpResponse {
-  reply: string;
 }

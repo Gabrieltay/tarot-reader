@@ -2,26 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { use, useState } from "react";
+import { use } from "react";
 import { useRouter } from "next/navigation";
-import FollowUpChat from "@/components/FollowUpChat";
 import Interpretation from "@/components/Interpretation";
 import JournalNotes from "@/components/JournalNotes";
 import { CATEGORY_LABELS } from "@/lib/categories";
-import {
-  addConversationTurn,
-  addJournalEntry,
-  deleteJournalEntry,
-  deleteReading,
-  useReading,
-} from "@/lib/history";
-import { InterpretRequestCard } from "@/types/tarot";
+import { addJournalEntry, deleteJournalEntry, deleteReading, useReading } from "@/lib/history";
 
 export default function ReadingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const reading = useReading(id);
-  const [followUpLoading, setFollowUpLoading] = useState(false);
 
   if (!reading) {
     return (
@@ -50,48 +41,6 @@ export default function ReadingDetailPage({ params }: { params: Promise<{ id: st
   const handleDeleteReading = () => {
     deleteReading(reading.id);
     router.push("/history");
-  };
-
-  const handleSendFollowUp = async (message: string) => {
-    addConversationTurn(reading.id, { role: "user", text: message });
-    setFollowUpLoading(true);
-    try {
-      const cards: InterpretRequestCard[] = reading.cards.map((c) => ({
-        cardId: c.cardId,
-        name: c.name,
-        orientation: c.orientation,
-        position: c.position,
-        meaning: "",
-        suit: c.suit,
-        arcana: c.arcana,
-      }));
-      const res = await fetch("/api/followup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          question: reading.question,
-          category: reading.category,
-          spread: reading.spreadName,
-          cards,
-          reading: reading.reading,
-          conversation: reading.conversation.map((t) => ({ role: t.role, text: t.text })),
-          message,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Something went wrong.");
-      addConversationTurn(reading.id, { role: "assistant", text: data.reply });
-    } catch (err) {
-      addConversationTurn(reading.id, {
-        role: "assistant",
-        text:
-          err instanceof Error
-            ? `I couldn't reach the reader: ${err.message}`
-            : "I couldn't reach the reader. Please try again.",
-      });
-    } finally {
-      setFollowUpLoading(false);
-    }
   };
 
   const date = new Date(reading.createdAt);
@@ -166,12 +115,6 @@ export default function ReadingDetailPage({ params }: { params: Promise<{ id: st
           journal={reading.journal}
           onAdd={handleAddJournal}
           onDelete={handleDeleteJournal}
-        />
-
-        <FollowUpChat
-          conversation={reading.conversation}
-          onSend={handleSendFollowUp}
-          loading={followUpLoading}
         />
       </div>
     </div>
