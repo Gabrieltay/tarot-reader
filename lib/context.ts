@@ -20,6 +20,39 @@ function tokenize(text: string): string[] {
 const RELEVANCE_THRESHOLD = 1.5;
 const RECENCY_HALF_LIFE_DAYS = 21;
 
+const CATEGORY_KEYWORDS: Record<Exclude<ReadingCategory, "general">, string[]> = {
+  love: ["love", "relationship", "partner", "boyfriend", "girlfriend", "marriage", "spouse", "dating", "romance", "breakup", "husband", "wife", "crush"],
+  career: ["career", "job", "work", "boss", "promotion", "interview", "business", "coworker", "workplace", "salary", "hire", "hired", "fired"],
+  "life-path": ["purpose", "path", "direction", "destiny", "future", "journey", "calling"],
+  family: ["family", "parent", "parents", "mother", "father", "sibling", "brother", "sister", "child", "children", "kids"],
+  "personal-growth": ["growth", "confidence", "habit", "habits", "mindset", "change", "improve", "healing", "boundaries"],
+  finances: ["money", "finance", "financial", "debt", "invest", "investment", "savings", "budget", "income", "afford"],
+  health: ["health", "illness", "sick", "body", "wellness", "therapy", "mental", "anxiety", "sleep", "energy"],
+};
+
+/**
+ * The real category comes back from the LLM only after this reading is
+ * generated, so there's nothing authoritative to score past readings
+ * against yet. This gives a rough same-session guess from keywords so the
+ * "same category" relevance signal isn't permanently dead for every request.
+ */
+export function guessCategory(question: string): ReadingCategory | null {
+  const tokens = tokenize(question);
+  let best: ReadingCategory | null = null;
+  let bestCount = 0;
+  for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS) as [
+    Exclude<ReadingCategory, "general">,
+    string[]
+  ][]) {
+    const count = tokens.filter((t) => keywords.includes(t)).length;
+    if (count > bestCount) {
+      bestCount = count;
+      best = category;
+    }
+  }
+  return best;
+}
+
 interface CurrentReadingContext {
   question: string;
   category: ReadingCategory | null;

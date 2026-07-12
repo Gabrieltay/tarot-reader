@@ -9,7 +9,7 @@ import Interpretation from "@/components/Interpretation";
 import IvoryPanel from "@/components/IvoryPanel";
 import { drawSpread } from "@/lib/draw";
 import { SPREADS } from "@/lib/spreads";
-import { selectRelevantReadings, toContextSummary } from "@/lib/context";
+import { guessCategory, selectRelevantReadings, toContextSummary } from "@/lib/context";
 import { generateId, getHistory, saveReading } from "@/lib/history";
 import {
   DrawnCard,
@@ -52,7 +52,7 @@ export default function Home() {
         const history = getHistory();
         const contextReadings = selectRelevantReadings(history, {
           question: q,
-          category: null,
+          category: guessCategory(q),
           cardNames: cards.map((c) => c.card.name),
         }).map(toContextSummary);
 
