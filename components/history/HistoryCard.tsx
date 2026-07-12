@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CATEGORY_LABELS } from "@/lib/categories";
+import { truncate } from "@/lib/context";
 import { SavedReading } from "@/types/tarot";
 
 interface HistoryCardProps {
@@ -53,7 +54,7 @@ export default function HistoryCard({ reading, onDelete }: HistoryCardProps) {
           ))}
         </div>
         <p className="text-sm text-ink-soft font-sans mt-2.5 leading-relaxed">
-          {reading.reading.summary}
+          {truncate(reading.interpretation, 160)}
         </p>
         {reading.journal.length > 0 && (
           <p className="text-xs text-gold-deep/80 font-sans mt-2">

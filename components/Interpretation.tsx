@@ -1,81 +1,17 @@
 "use client";
 
-import { ReactNode, useState } from "react";
-import { StructuredReading } from "@/types/tarot";
-
-export interface CardMeta {
-  cardId: string;
-  position: string;
-  reversed: boolean;
-}
-
 interface InterpretationProps {
   loading: boolean;
   error: string | null;
-  reading: StructuredReading | null;
-  cardMeta: CardMeta[];
+  text: string | null;
 }
 
-function SectionHeading({ children }: { children: ReactNode }) {
-  return (
-    <p className="text-[11px] uppercase tracking-[0.2em] text-gold-deep/80 font-sans font-medium mb-2">
-      {children}
-    </p>
-  );
-}
+export default function Interpretation({ loading, error, text }: InterpretationProps) {
+  if (!loading && !error && !text) return null;
 
-function CardInterpretationRow({
-  interpretation,
-  meta,
-}: {
-  interpretation: StructuredReading["cardInterpretations"][number];
-  meta: CardMeta | undefined;
-}) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="rounded-xl border border-ink/10 bg-white/25 overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-3 px-5 py-3.5 text-left cursor-pointer"
-      >
-        <div>
-          <span className="font-display text-lg text-ink">{interpretation.name}</span>
-          {meta && (
-            <span className="ml-2 text-xs text-ink-soft font-sans">
-              {meta.position} · {meta.reversed ? "Reversed" : "Upright"}
-            </span>
-          )}
-        </div>
-        <span className="text-gold-deep text-sm font-sans">{open ? "−" : "+"}</span>
-      </button>
-      {open && (
-        <div className="px-5 pb-5 space-y-3 text-sm text-ink/85 font-sans leading-relaxed">
-          <div>
-            <span className="text-ink-soft font-medium">Traditional symbolism: </span>
-            {interpretation.symbolism}
-          </div>
-          <div>
-            <span className="text-ink-soft font-medium">In your question: </span>
-            {interpretation.meaningInContext}
-          </div>
-          <div>
-            <span className="text-ink-soft font-medium">Emotional perspective: </span>
-            {interpretation.emotionalPerspective}
-          </div>
-          <div>
-            <span className="text-ink-soft font-medium">Practical insight: </span>
-            {interpretation.practicalInsight}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function Interpretation({ loading, error, reading, cardMeta }: InterpretationProps) {
-  if (!loading && !error && !reading) return null;
+  const paragraphs = text
+    ? text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+    : [];
 
   return (
     <div className="w-full max-w-2xl mx-auto ivory-panel px-7 py-9 sm:px-12 sm:py-12 animate-fade-in-up">
@@ -101,64 +37,11 @@ export default function Interpretation({ loading, error, reading, cardMeta }: In
         <p className="text-rose text-center font-sans">{error}</p>
       )}
 
-      {reading && !loading && (
-        <div className="space-y-8">
-          <div>
-            <SectionHeading>Overall Energy</SectionHeading>
-            <p className="manuscript-text text-ink/90 font-display text-lg leading-[1.85]">
-              {reading.overallEnergy}
-            </p>
-          </div>
-
-          <div>
-            <SectionHeading>The Cards</SectionHeading>
-            <div className="space-y-2.5">
-              {reading.cardInterpretations.map((ci) => (
-                <CardInterpretationRow
-                  key={ci.cardId}
-                  interpretation={ci}
-                  meta={cardMeta.find((m) => m.cardId === ci.cardId)}
-                />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <SectionHeading>How the Cards Connect</SectionHeading>
-            <p className="text-ink/85 font-sans text-[15px] leading-relaxed">
-              {reading.cardRelationships}
-            </p>
-          </div>
-
-          {reading.connectionToPast && (
-            <div className="rounded-xl border border-gold/25 bg-gold/[0.06] px-5 py-4">
-              <SectionHeading>Connection to Previous Readings</SectionHeading>
-              <p className="text-ink/85 font-sans text-[15px] leading-relaxed">
-                {reading.connectionToPast}
-              </p>
-            </div>
-          )}
-
-          <div className="text-center py-2">
-            <SectionHeading>Key Message</SectionHeading>
-            <p className="font-display text-xl text-ink italic leading-relaxed">
-              {reading.keyMessage}
-            </p>
-          </div>
-
-          <div>
-            <SectionHeading>Practical Guidance</SectionHeading>
-            <p className="text-ink/85 font-sans text-[15px] leading-relaxed">
-              {reading.practicalGuidance}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-ink/10 bg-white/30 px-5 py-4 text-center">
-            <SectionHeading>Reflect</SectionHeading>
-            <p className="font-display text-lg text-ink italic leading-relaxed">
-              {reading.reflectionQuestion}
-            </p>
-          </div>
+      {paragraphs.length > 0 && !loading && (
+        <div className="manuscript-text space-y-5 text-ink/90 font-display text-lg leading-[1.85]">
+          {paragraphs.map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
         </div>
       )}
     </div>

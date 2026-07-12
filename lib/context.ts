@@ -73,6 +73,12 @@ export function selectRelevantReadings(
     .map(({ reading }) => reading);
 }
 
+const SUMMARY_MAX_CHARS = 220;
+
+export function truncate(text: string, max = SUMMARY_MAX_CHARS): string {
+  return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
+}
+
 export function toContextSummary(reading: SavedReading): ContextReadingSummary {
   return {
     id: reading.id,
@@ -81,6 +87,6 @@ export function toContextSummary(reading: SavedReading): ContextReadingSummary {
     category: reading.category,
     spreadName: reading.spreadName,
     cardNames: reading.cards.map((c) => c.name),
-    keyMessage: reading.reading.keyMessage,
+    summary: truncate(reading.interpretation),
   };
 }

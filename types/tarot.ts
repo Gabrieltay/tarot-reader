@@ -59,7 +59,7 @@ export interface ContextReadingSummary {
   category: ReadingCategory | null;
   spreadName: string;
   cardNames: string[];
-  keyMessage: string;
+  summary: string;
 }
 
 export interface InterpretRequest {
@@ -70,28 +70,8 @@ export interface InterpretRequest {
   contextReadings: ContextReadingSummary[];
 }
 
-export interface CardInterpretation {
-  cardId: string;
-  name: string;
-  symbolism: string;
-  meaningInContext: string;
-  emotionalPerspective: string;
-  practicalInsight: string;
-}
-
-export interface StructuredReading {
-  overallEnergy: string;
-  cardInterpretations: CardInterpretation[];
-  cardRelationships: string;
-  connectionToPast: string | null;
-  keyMessage: string;
-  practicalGuidance: string;
-  reflectionQuestion: string;
-  summary: string;
-}
-
 export interface InterpretResponse {
-  reading: StructuredReading;
+  interpretation: string;
 }
 
 export interface JournalEntry {
@@ -118,6 +98,6 @@ export interface SavedReading {
   spreadId: SpreadId;
   spreadName: string;
   cards: SavedReadingCard[];
-  reading: StructuredReading;
+  interpretation: string;
   journal: JournalEntry[];
 }

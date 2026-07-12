@@ -100,16 +100,7 @@ export default function ReadingDetailPage({ params }: { params: Promise<{ id: st
           ))}
         </div>
 
-        <Interpretation
-          loading={false}
-          error={null}
-          reading={reading.reading}
-          cardMeta={reading.cards.map((c) => ({
-            cardId: c.cardId,
-            position: c.position,
-            reversed: c.orientation === "reversed",
-          }))}
-        />
+        <Interpretation loading={false} error={null} text={reading.interpretation} />
 
         <JournalNotes
           journal={reading.journal}

@@ -7,19 +7,17 @@ import CategorySelector from "@/components/CategorySelector";
 import SpreadSelector from "@/components/SpreadSelector";
 import SpreadLayout from "@/components/SpreadLayout";
 import Interpretation from "@/components/Interpretation";
-import SaveReadingBar from "@/components/SaveReadingBar";
 import IvoryPanel from "@/components/IvoryPanel";
 import { drawSpread } from "@/lib/draw";
 import { SPREADS } from "@/lib/spreads";
 import { selectRelevantReadings, toContextSummary } from "@/lib/context";
-import { deleteReading, generateId, getHistory, saveReading } from "@/lib/history";
+import { generateId, getHistory, saveReading } from "@/lib/history";
 import {
   DrawnCard,
   InterpretRequestCard,
   ReadingCategory,
   SavedReading,
   SpreadId,
-  StructuredReading,
 } from "@/types/tarot";
 
 type Stage = "setup" | "reading";
@@ -42,17 +40,17 @@ export default function Home() {
   const [category, setCategory] = useState<ReadingCategory | null>(null);
   const [spreadId, setSpreadId] = useState<SpreadId>("single");
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
-  const [reading, setReading] = useState<StructuredReading | null>(null);
+  const [interpretation, setInterpretation] = useState<string | null>(null);
   const [interpretLoading, setInterpretLoading] = useState(false);
   const [interpretError, setInterpretError] = useState<string | null>(null);
-
-  const [savedReadingId, setSavedReadingId] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
 
   const fetchInterpretation = useCallback(
     async (q: string, cat: ReadingCategory | null, spread: SpreadId, cards: DrawnCard[]) => {
       setInterpretLoading(true);
       setInterpretError(null);
-      setReading(null);
+      setInterpretation(null);
+      setSaved(false);
       try {
         const history = getHistory();
         const contextReadings = selectRelevantReadings(history, {
@@ -76,7 +74,30 @@ export default function Home() {
         if (!res.ok) {
           throw new Error(data?.error || "Something went wrong.");
         }
-        setReading(data.reading as StructuredReading);
+        const text: string = data.interpretation;
+        setInterpretation(text);
+
+        const savedReading: SavedReading = {
+          id: generateId(),
+          createdAt: new Date().toISOString(),
+          question: q,
+          category: cat,
+          spreadId: spread,
+          spreadName: SPREADS[spread].name,
+          cards: cards.map((c) => ({
+            cardId: c.card.id,
+            name: c.card.name,
+            orientation: c.reversed ? "reversed" : "upright",
+            position: c.position.label,
+            image: c.card.image,
+            suit: c.card.suit,
+            arcana: c.card.arcana,
+          })),
+          interpretation: text,
+          journal: [],
+        };
+        saveReading(savedReading);
+        setSaved(true);
       } catch (err) {
         setInterpretError(
           err instanceof Error ? err.message : "Something went wrong."
@@ -93,7 +114,6 @@ export default function Home() {
     const drawn = drawSpread(spread);
     setDrawnCards(drawn);
     setStage("reading");
-    setSavedReadingId(null);
     fetchInterpretation(question, category, spreadId, drawn);
   }, [question, category, spreadId, fetchInterpretation]);
 
@@ -104,42 +124,10 @@ export default function Home() {
   const handleNewQuestion = useCallback(() => {
     setStage("setup");
     setDrawnCards([]);
-    setReading(null);
+    setInterpretation(null);
     setInterpretError(null);
-    setSavedReadingId(null);
+    setSaved(false);
   }, []);
-
-  const handleSaveReading = useCallback(() => {
-    if (!reading) return;
-    const id = generateId();
-    const saved: SavedReading = {
-      id,
-      createdAt: new Date().toISOString(),
-      question,
-      category,
-      spreadId,
-      spreadName: SPREADS[spreadId].name,
-      cards: drawnCards.map((c) => ({
-        cardId: c.card.id,
-        name: c.card.name,
-        orientation: c.reversed ? "reversed" : "upright",
-        position: c.position.label,
-        image: c.card.image,
-        suit: c.card.suit,
-        arcana: c.card.arcana,
-      })),
-      reading,
-      journal: [],
-    };
-    saveReading(saved);
-    setSavedReadingId(id);
-  }, [reading, question, category, spreadId, drawnCards]);
-
-  const handleUnsaveReading = useCallback(() => {
-    if (!savedReadingId) return;
-    deleteReading(savedReadingId);
-    setSavedReadingId(null);
-  }, [savedReadingId]);
 
   const canDraw = question.trim().length > 0;
 
@@ -189,10 +177,6 @@ export default function Home() {
               <CategorySelector value={category} onChange={setCategory} />
               <div className="gold-divider-soft" />
               <SpreadSelector value={spreadId} onChange={setSpreadId} />
-              <p className="text-[11px] text-ink-soft/70 font-sans text-center -mt-4 leading-relaxed">
-                If any of your saved readings are genuinely relevant, they&rsquo;ll quietly
-                inform this one. Nothing leaves this device.
-              </p>
               <button
                 type="button"
                 disabled={!canDraw}
@@ -224,20 +208,18 @@ export default function Home() {
           <Interpretation
             loading={interpretLoading}
             error={interpretError}
-            reading={reading}
-            cardMeta={drawnCards.map((c) => ({
-              cardId: c.card.id,
-              position: c.position.label,
-              reversed: c.reversed,
-            }))}
+            text={interpretation}
           />
 
-          {reading && !interpretLoading && (
-            <SaveReadingBar
-              saved={savedReadingId !== null}
-              onSave={handleSaveReading}
-              onUnsave={handleUnsaveReading}
-            />
+          {saved && (
+            <p className="text-[11px] text-lavender-gray/50 font-sans text-center max-w-md -mt-6">
+              Saved to your journal — stored only on this device. You can remove it
+              anytime from your{" "}
+              <Link href="/history" className="underline underline-offset-2 hover:text-lavender-gray/80">
+                History
+              </Link>
+              .
+            </p>
           )}
 
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
