@@ -82,6 +82,22 @@ export async function POST(request: NextRequest) {
 
   const prompt = buildPrompt(normalizedBody);
 
+  console.log(
+    `[llm-context] ${new Date().toISOString()} ${
+      contextReadings.length > 0
+        ? JSON.stringify(
+            contextReadings.map((r) => ({
+              id: r.id,
+              createdAt: r.createdAt,
+              category: r.category,
+              question: r.question,
+              cardNames: r.cardNames,
+            }))
+          )
+        : "no past readings included"
+    }`
+  );
+
   try {
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
