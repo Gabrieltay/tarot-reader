@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { InterpretRequest } from "@/types/tarot";
+import { CATEGORY_LIST } from "@/lib/categories";
+import { InterpretRequest, ReadingCategory } from "@/types/tarot";
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
 const RESPONSIBLE_LANGUAGE_GUIDANCE = `Tarot offers symbolic guidance for self-reflection, not factual predictions or certainties. Never state that something will definitely happen. Favor phrasing such as "the cards may suggest...", "one possible interpretation is...", "symbolically, this could represent...", "you may wish to reflect on...". Encourage self-awareness and thoughtful decision-making rather than dependence on the reading.`;
 
-function buildPrompt({ question, category, spread, cards, contextReadings }: InterpretRequest): string {
+const CATEGORY_LINE_PATTERN = /^CATEGORY:\s*([a-z-]+)\s*\n?/i;
+
+function buildPrompt({ question, spread, cards, contextReadings }: InterpretRequest): string {
   const cardLines = cards
     .map((c, i) => {
       return `${i + 1}. Position: ${c.position} — ${c.name} (${c.orientation})\n   Traditional meaning: ${c.meaning}`;
@@ -24,7 +27,7 @@ function buildPrompt({ question, category, spread, cards, contextReadings }: Int
           )}\n\nOnly let a past reading inform this one if it is genuinely relevant (a recurring card, a closely related question, a continuing theme). Weave that connection naturally into the prose as part of the narrative — never call it out as a separate note, and don't mention it at all if nothing is truly relevant.\n`
       : "";
 
-  return `You are a warm, insightful tarot reader. A seeker has asked the following question and drawn a "${spread}" spread${category ? ` in the category of ${category}` : ""}. Weave the cards into a single cohesive, flowing reading that speaks directly to their question — don't just list meanings one by one, connect them into a narrative. Keep it grounded, compassionate, and specific to the cards drawn and their positions. Close with one grounded, practical thought and a gentle reflective question, woven naturally into the prose rather than labeled. Aim for 3-5 short paragraphs. Do not use markdown headers.
+  return `You are a warm, insightful tarot reader. A seeker has asked the following question and drawn a "${spread}" spread. Weave the cards into a single cohesive, flowing reading that speaks directly to their question — don't just list meanings one by one, connect them into a narrative. Keep it grounded, compassionate, and specific to the cards drawn and their positions. Close with one grounded, practical thought and a gentle reflective question, woven naturally into the prose rather than labeled. Aim for 3-5 short paragraphs. Do not use markdown headers.
 
 ${RESPONSIBLE_LANGUAGE_GUIDANCE}
 ${contextSection}
@@ -33,7 +36,19 @@ Seeker's question: "${question}"
 Cards drawn:
 ${cardLines}
 
-Write the reading now.`;
+First, on a line by itself, output which area of life this question best fits, formatted exactly as "CATEGORY: <value>" where <value> is one of: ${CATEGORY_LIST.join(", ")}. Choose "general" if none fits clearly. Then, on the following lines, write the reading.`;
+}
+
+function extractCategory(text: string): { category: ReadingCategory | null; interpretation: string } {
+  const match = text.match(CATEGORY_LINE_PATTERN);
+  if (!match) {
+    return { category: null, interpretation: text.trim() };
+  }
+  const candidate = match[1].toLowerCase();
+  const category = (CATEGORY_LIST as string[]).includes(candidate)
+    ? (candidate as ReadingCategory)
+    : null;
+  return { category, interpretation: text.slice(match[0].length).trim() };
 }
 
 export async function POST(request: NextRequest) {
@@ -62,7 +77,7 @@ export async function POST(request: NextRequest) {
   const normalizedBody: InterpretRequest = { ...body, contextReadings };
 
   console.log(
-    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} category="${body.category ?? ""}" spread="${body.spread}" question="${body.question}"`
+    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} spread="${body.spread}" question="${body.question}"`
   );
 
   const prompt = buildPrompt(normalizedBody);
@@ -107,7 +122,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ interpretation: text.trim() });
+    const { category, interpretation } = extractCategory(text.trim());
+
+    return NextResponse.json({ interpretation, category });
   } catch (err) {
     console.error("Failed to reach Gemini API:", err);
     return NextResponse.json(

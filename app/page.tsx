@@ -3,7 +3,6 @@
 import { useCallback, useState } from "react";
 import Link from "next/link";
 import QuestionInput from "@/components/QuestionInput";
-import CategorySelector from "@/components/CategorySelector";
 import SpreadSelector from "@/components/SpreadSelector";
 import SpreadLayout from "@/components/SpreadLayout";
 import Interpretation from "@/components/Interpretation";
@@ -15,7 +14,6 @@ import { generateId, getHistory, saveReading } from "@/lib/history";
 import {
   DrawnCard,
   InterpretRequestCard,
-  ReadingCategory,
   SavedReading,
   SpreadId,
 } from "@/types/tarot";
@@ -37,7 +35,6 @@ function toRequestCards(cards: DrawnCard[]): InterpretRequestCard[] {
 export default function Home() {
   const [stage, setStage] = useState<Stage>("setup");
   const [question, setQuestion] = useState("");
-  const [category, setCategory] = useState<ReadingCategory | null>(null);
   const [spreadId, setSpreadId] = useState<SpreadId>("single");
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [interpretation, setInterpretation] = useState<string | null>(null);
@@ -46,7 +43,7 @@ export default function Home() {
   const [saved, setSaved] = useState(false);
 
   const fetchInterpretation = useCallback(
-    async (q: string, cat: ReadingCategory | null, spread: SpreadId, cards: DrawnCard[]) => {
+    async (q: string, spread: SpreadId, cards: DrawnCard[]) => {
       setInterpretLoading(true);
       setInterpretError(null);
       setInterpretation(null);
@@ -55,7 +52,7 @@ export default function Home() {
         const history = getHistory();
         const contextReadings = selectRelevantReadings(history, {
           question: q,
-          category: cat,
+          category: null,
           cardNames: cards.map((c) => c.card.name),
         }).map(toContextSummary);
 
@@ -64,7 +61,6 @@ export default function Home() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             question: q,
-            category: cat,
             spread: SPREADS[spread].name,
             cards: toRequestCards(cards),
             contextReadings,
@@ -81,7 +77,7 @@ export default function Home() {
           id: generateId(),
           createdAt: new Date().toISOString(),
           question: q,
-          category: cat,
+          category: data.category ?? null,
           spreadId: spread,
           spreadName: SPREADS[spread].name,
           cards: cards.map((c) => ({
@@ -114,8 +110,8 @@ export default function Home() {
     const drawn = drawSpread(spread);
     setDrawnCards(drawn);
     setStage("reading");
-    fetchInterpretation(question, category, spreadId, drawn);
-  }, [question, category, spreadId, fetchInterpretation]);
+    fetchInterpretation(question, spreadId, drawn);
+  }, [question, spreadId, fetchInterpretation]);
 
   const handleDrawAgain = useCallback(() => {
     handleDraw();
@@ -173,8 +169,6 @@ export default function Home() {
                 </p>
               </div>
               <QuestionInput value={question} onChange={setQuestion} />
-              <div className="gold-divider-soft" />
-              <CategorySelector value={category} onChange={setCategory} />
               <div className="gold-divider-soft" />
               <SpreadSelector value={spreadId} onChange={setSpreadId} />
               <button
