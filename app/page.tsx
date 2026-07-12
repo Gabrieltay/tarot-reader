@@ -1,51 +1,103 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Link from "next/link";
 import QuestionInput from "@/components/QuestionInput";
+import CategorySelector from "@/components/CategorySelector";
 import SpreadSelector from "@/components/SpreadSelector";
 import SpreadLayout from "@/components/SpreadLayout";
 import Interpretation from "@/components/Interpretation";
 import IvoryPanel from "@/components/IvoryPanel";
 import { drawSpread } from "@/lib/draw";
 import { SPREADS } from "@/lib/spreads";
-import { DrawnCard, SpreadId } from "@/types/tarot";
+import { selectRelevantReadings, toContextSummary } from "@/lib/context";
+import { generateId, getHistory, saveReading } from "@/lib/history";
+import {
+  DrawnCard,
+  InterpretRequestCard,
+  ReadingCategory,
+  SavedReading,
+  SpreadId,
+} from "@/types/tarot";
 
 type Stage = "setup" | "reading";
+
+function toRequestCards(cards: DrawnCard[]): InterpretRequestCard[] {
+  return cards.map((c) => ({
+    cardId: c.card.id,
+    name: c.card.name,
+    orientation: c.reversed ? "reversed" : "upright",
+    position: c.position.label,
+    meaning: c.reversed ? c.card.reversed_meaning : c.card.upright_meaning,
+    suit: c.card.suit,
+    arcana: c.card.arcana,
+  }));
+}
 
 export default function Home() {
   const [stage, setStage] = useState<Stage>("setup");
   const [question, setQuestion] = useState("");
+  const [category, setCategory] = useState<ReadingCategory | null>(null);
   const [spreadId, setSpreadId] = useState<SpreadId>("single");
   const [drawnCards, setDrawnCards] = useState<DrawnCard[]>([]);
   const [interpretation, setInterpretation] = useState<string | null>(null);
   const [interpretLoading, setInterpretLoading] = useState(false);
   const [interpretError, setInterpretError] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
 
   const fetchInterpretation = useCallback(
-    async (q: string, spread: SpreadId, cards: DrawnCard[]) => {
+    async (q: string, cat: ReadingCategory | null, spread: SpreadId, cards: DrawnCard[]) => {
       setInterpretLoading(true);
       setInterpretError(null);
       setInterpretation(null);
+      setSaved(false);
       try {
+        const history = getHistory();
+        const contextReadings = selectRelevantReadings(history, {
+          question: q,
+          category: cat,
+          cardNames: cards.map((c) => c.card.name),
+        }).map(toContextSummary);
+
         const res = await fetch("/api/interpret", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             question: q,
+            category: cat,
             spread: SPREADS[spread].name,
-            cards: cards.map((c) => ({
-              name: c.card.name,
-              orientation: c.reversed ? "reversed" : "upright",
-              position: c.position.label,
-              meaning: c.reversed ? c.card.reversed_meaning : c.card.upright_meaning,
-            })),
+            cards: toRequestCards(cards),
+            contextReadings,
           }),
         });
         const data = await res.json();
         if (!res.ok) {
           throw new Error(data?.error || "Something went wrong.");
         }
-        setInterpretation(data.interpretation);
+        const text: string = data.interpretation;
+        setInterpretation(text);
+
+        const savedReading: SavedReading = {
+          id: generateId(),
+          createdAt: new Date().toISOString(),
+          question: q,
+          category: cat,
+          spreadId: spread,
+          spreadName: SPREADS[spread].name,
+          cards: cards.map((c) => ({
+            cardId: c.card.id,
+            name: c.card.name,
+            orientation: c.reversed ? "reversed" : "upright",
+            position: c.position.label,
+            image: c.card.image,
+            suit: c.card.suit,
+            arcana: c.card.arcana,
+          })),
+          interpretation: text,
+          journal: [],
+        };
+        saveReading(savedReading);
+        setSaved(true);
       } catch (err) {
         setInterpretError(
           err instanceof Error ? err.message : "Something went wrong."
@@ -62,8 +114,8 @@ export default function Home() {
     const drawn = drawSpread(spread);
     setDrawnCards(drawn);
     setStage("reading");
-    fetchInterpretation(question, spreadId, drawn);
-  }, [question, spreadId, fetchInterpretation]);
+    fetchInterpretation(question, category, spreadId, drawn);
+  }, [question, category, spreadId, fetchInterpretation]);
 
   const handleDrawAgain = useCallback(() => {
     handleDraw();
@@ -74,12 +126,20 @@ export default function Home() {
     setDrawnCards([]);
     setInterpretation(null);
     setInterpretError(null);
+    setSaved(false);
   }, []);
 
   const canDraw = question.trim().length > 0;
 
   return (
     <div className="flex flex-1 flex-col items-center px-4 py-14 sm:py-20">
+      <Link
+        href="/history"
+        className="fixed top-5 right-5 z-20 rounded-full border border-gold/30 bg-white/[0.04] px-4 py-1.5 text-[11px] uppercase tracking-[0.2em] text-gold-soft/90 font-sans hover:bg-white/[0.08] transition-colors"
+      >
+        History
+      </Link>
+
       <header className="text-center mb-12 sm:mb-16">
         <svg
           className="mx-auto mb-4 opacity-80"
@@ -99,7 +159,7 @@ export default function Home() {
         </h1>
         <p className="text-lavender-gray/70 mt-3 max-w-md mx-auto font-sans text-[15px] leading-relaxed">
           Ask a question, draw your cards, and receive a reading woven just for
-          you.
+          you — a companion for reflection, not a fortune teller.
         </p>
       </header>
 
@@ -113,6 +173,8 @@ export default function Home() {
                 </p>
               </div>
               <QuestionInput value={question} onChange={setQuestion} />
+              <div className="gold-divider-soft" />
+              <CategorySelector value={category} onChange={setCategory} />
               <div className="gold-divider-soft" />
               <SpreadSelector value={spreadId} onChange={setSpreadId} />
               <button
@@ -148,6 +210,17 @@ export default function Home() {
             error={interpretError}
             text={interpretation}
           />
+
+          {saved && (
+            <p className="text-[11px] text-lavender-gray/50 font-sans text-center max-w-md -mt-6">
+              Saved to your journal — stored only on this device. You can remove it
+              anytime from your{" "}
+              <Link href="/history" className="underline underline-offset-2 hover:text-lavender-gray/80">
+                History
+              </Link>
+              .
+            </p>
+          )}
 
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
             <button

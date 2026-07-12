@@ -3,15 +3,31 @@ import { InterpretRequest } from "@/types/tarot";
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
 
-function buildPrompt({ question, spread, cards }: InterpretRequest): string {
+const RESPONSIBLE_LANGUAGE_GUIDANCE = `Tarot offers symbolic guidance for self-reflection, not factual predictions or certainties. Never state that something will definitely happen. Favor phrasing such as "the cards may suggest...", "one possible interpretation is...", "symbolically, this could represent...", "you may wish to reflect on...". Encourage self-awareness and thoughtful decision-making rather than dependence on the reading.`;
+
+function buildPrompt({ question, category, spread, cards, contextReadings }: InterpretRequest): string {
   const cardLines = cards
     .map((c, i) => {
       return `${i + 1}. Position: ${c.position} — ${c.name} (${c.orientation})\n   Traditional meaning: ${c.meaning}`;
     })
     .join("\n");
 
-  return `You are a warm, insightful tarot reader. A seeker has asked the following question and drawn a "${spread}" spread. Weave the cards into a single cohesive, flowing reading that speaks directly to their question — don't just list meanings one by one, connect them into a narrative. Keep it grounded, compassionate, and specific to the cards drawn and their positions. Aim for 3-5 short paragraphs. Do not use markdown headers.
+  const contextSection =
+    contextReadings.length > 0
+      ? `\nFor reference, here are a few of the seeker's past readings that may or may not be relevant:\n\n${contextReadings
+          .map(
+            (r, i) =>
+              `${i + 1}. ${new Date(r.createdAt).toLocaleDateString()} — Question: "${r.question}", Cards: ${r.cardNames.join(", ")}\n   Gist: ${r.summary}`
+          )
+          .join(
+            "\n"
+          )}\n\nOnly let a past reading inform this one if it is genuinely relevant (a recurring card, a closely related question, a continuing theme). Weave that connection naturally into the prose as part of the narrative — never call it out as a separate note, and don't mention it at all if nothing is truly relevant.\n`
+      : "";
 
+  return `You are a warm, insightful tarot reader. A seeker has asked the following question and drawn a "${spread}" spread${category ? ` in the category of ${category}` : ""}. Weave the cards into a single cohesive, flowing reading that speaks directly to their question — don't just list meanings one by one, connect them into a narrative. Keep it grounded, compassionate, and specific to the cards drawn and their positions. Close with one grounded, practical thought and a gentle reflective question, woven naturally into the prose rather than labeled. Aim for 3-5 short paragraphs. Do not use markdown headers.
+
+${RESPONSIBLE_LANGUAGE_GUIDANCE}
+${contextSection}
 Seeker's question: "${question}"
 
 Cards drawn:
@@ -42,12 +58,14 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
+  const contextReadings = Array.isArray(body.contextReadings) ? body.contextReadings : [];
+  const normalizedBody: InterpretRequest = { ...body, contextReadings };
 
   console.log(
-    `[question-submitted] ${new Date().toISOString()} spread="${body.spread}" question="${body.question}"`
+    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} category="${body.category ?? ""}" spread="${body.spread}" question="${body.question}"`
   );
 
-  const prompt = buildPrompt(body);
+  const prompt = buildPrompt(normalizedBody);
 
   try {
     const res = await fetch(
