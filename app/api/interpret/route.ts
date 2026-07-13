@@ -1,8 +1,104 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CATEGORY_LIST } from "@/lib/categories";
-import { InterpretRequest, ReadingCategory } from "@/types/tarot";
+import {
+  ContextReadingSummary,
+  InterpretRequest,
+  InterpretRequestCard,
+  ReadingCategory,
+} from "@/types/tarot";
 
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash";
+
+const MAX_QUESTION_LENGTH = 500;
+const MAX_SPREAD_LENGTH = 100;
+const MAX_SHORT_FIELD_LENGTH = 100;
+const MAX_SUMMARY_LENGTH = 500;
+const MAX_CARDS = 12;
+const MAX_CONTEXT_READINGS = 5;
+const MAX_CARD_NAMES = 12;
+const ORIENTATIONS = new Set(["upright", "reversed"]);
+const SUITS = new Set(["wands", "cups", "swords", "pentacles", null]);
+const ARCANAS = new Set(["major", "minor"]);
+
+function isNonEmptyShortString(value: unknown, maxLength = MAX_SHORT_FIELD_LENGTH): value is string {
+  return typeof value === "string" && value.trim().length > 0 && value.length <= maxLength;
+}
+
+function validateCard(card: unknown): card is InterpretRequestCard {
+  if (!card || typeof card !== "object") return false;
+  const c = card as Record<string, unknown>;
+  return (
+    isNonEmptyShortString(c.cardId) &&
+    isNonEmptyShortString(c.name) &&
+    typeof c.orientation === "string" &&
+    ORIENTATIONS.has(c.orientation) &&
+    isNonEmptyShortString(c.position) &&
+    isNonEmptyShortString(c.meaning, MAX_SUMMARY_LENGTH) &&
+    (c.suit === null || (typeof c.suit === "string" && SUITS.has(c.suit))) &&
+    typeof c.arcana === "string" &&
+    ARCANAS.has(c.arcana)
+  );
+}
+
+function validateContextReading(reading: unknown): reading is ContextReadingSummary {
+  if (!reading || typeof reading !== "object") return false;
+  const r = reading as Record<string, unknown>;
+  return (
+    isNonEmptyShortString(r.id) &&
+    typeof r.createdAt === "string" &&
+    isNonEmptyShortString(r.question, MAX_QUESTION_LENGTH) &&
+    (r.category === null || (typeof r.category === "string" && (CATEGORY_LIST as string[]).includes(r.category))) &&
+    isNonEmptyShortString(r.spreadName, MAX_SPREAD_LENGTH) &&
+    Array.isArray(r.cardNames) &&
+    r.cardNames.length <= MAX_CARD_NAMES &&
+    r.cardNames.every((n) => isNonEmptyShortString(n)) &&
+    isNonEmptyShortString(r.summary, MAX_SUMMARY_LENGTH)
+  );
+}
+
+function validateRequest(body: unknown): { data: InterpretRequest } | { error: string } {
+  if (!body || typeof body !== "object") {
+    return { error: "Request must include a question and at least one drawn card." };
+  }
+  const b = body as Record<string, unknown>;
+
+  if (!isNonEmptyShortString(b.question, MAX_QUESTION_LENGTH)) {
+    return {
+      error: `Question must be a non-empty string of at most ${MAX_QUESTION_LENGTH} characters.`,
+    };
+  }
+  if (!isNonEmptyShortString(b.spread, MAX_SPREAD_LENGTH)) {
+    return { error: "Spread must be a non-empty string." };
+  }
+  if (!Array.isArray(b.cards) || b.cards.length === 0 || b.cards.length > MAX_CARDS) {
+    return {
+      error: `Request must include between 1 and ${MAX_CARDS} drawn cards.`,
+    };
+  }
+  if (!b.cards.every(validateCard)) {
+    return { error: "One or more drawn cards are malformed." };
+  }
+
+  let contextReadings: ContextReadingSummary[] = [];
+  if (b.contextReadings !== undefined) {
+    if (!Array.isArray(b.contextReadings) || b.contextReadings.length > MAX_CONTEXT_READINGS) {
+      return { error: `contextReadings must be an array of at most ${MAX_CONTEXT_READINGS} items.` };
+    }
+    if (!b.contextReadings.every(validateContextReading)) {
+      return { error: "One or more context readings are malformed." };
+    }
+    contextReadings = b.contextReadings as ContextReadingSummary[];
+  }
+
+  return {
+    data: {
+      question: (b.question as string).trim(),
+      spread: (b.spread as string).trim(),
+      cards: b.cards as InterpretRequestCard[],
+      contextReadings,
+    },
+  };
+}
 
 const RESPONSIBLE_LANGUAGE_GUIDANCE = `Tarot offers symbolic guidance for self-reflection, not factual predictions or certainties. Never state that something will definitely happen. Favor phrasing such as "the cards may suggest...", "one possible interpretation is...", "symbolically, this could represent...", "you may wish to reflect on...". Encourage self-awareness and thoughtful decision-making rather than dependence on the reading.`;
 
@@ -60,24 +156,22 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  let body: InterpretRequest;
+  let rawBody: unknown;
   try {
-    body = await request.json();
+    rawBody = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  if (!body?.question || !Array.isArray(body.cards) || body.cards.length === 0) {
-    return NextResponse.json(
-      { error: "Request must include a question and at least one drawn card." },
-      { status: 400 }
-    );
+  const validated = validateRequest(rawBody);
+  if ("error" in validated) {
+    return NextResponse.json({ error: validated.error }, { status: 400 });
   }
-  const contextReadings = Array.isArray(body.contextReadings) ? body.contextReadings : [];
-  const normalizedBody: InterpretRequest = { ...body, contextReadings };
+  const normalizedBody = validated.data;
+  const { contextReadings } = normalizedBody;
 
   console.log(
-    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} spread="${body.spread}" question="${body.question}"`
+    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} spread="${normalizedBody.spread}" question="${normalizedBody.question}"`
   );
 
   const prompt = buildPrompt(normalizedBody);
