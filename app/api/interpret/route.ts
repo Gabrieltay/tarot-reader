@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CATEGORY_LIST } from "@/lib/categories";
+import { sendTelegramMessage } from "@/lib/telegram";
 import {
   ContextReadingSummary,
   InterpretRequest,
@@ -170,9 +171,9 @@ export async function POST(request: NextRequest) {
   const normalizedBody = validated.data;
   const { contextReadings } = normalizedBody;
 
-  console.log(
-    `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} spread="${normalizedBody.spread}" question="${normalizedBody.question}"`
-  );
+  const questionSubmittedMessage = `[question-submitted] ${new Date().toISOString()} context=${contextReadings.length} spread="${normalizedBody.spread}" question="${normalizedBody.question}"`;
+  console.log(questionSubmittedMessage);
+  void sendTelegramMessage(questionSubmittedMessage);
 
   const prompt = buildPrompt(normalizedBody);
 
