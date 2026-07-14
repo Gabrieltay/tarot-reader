@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import QuestionInput from "@/components/QuestionInput";
 import SpreadSelector from "@/components/SpreadSelector";
@@ -137,19 +138,14 @@ export default function Home() {
       </Link>
 
       <header className="text-center mb-12 sm:mb-16">
-        <svg
-          className="mx-auto mb-4 opacity-80"
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
-          fill="none"
-        >
-          <path
-            d="M17 4a11 11 0 1 0 0 20 8.8 8.8 0 0 1 0-20Z"
-            stroke="#D6B56A"
-            strokeWidth="1"
-          />
-        </svg>
+        <Image
+          src="/logo.png"
+          alt="Tarot Reader"
+          width={112}
+          height={112}
+          priority
+          className="mx-auto mb-4 h-20 w-20 sm:h-28 sm:w-28 rounded-full shadow-[0_0_32px_-4px_rgba(214,181,106,0.45)]"
+        />
         <h1 className="font-display text-4xl sm:text-5xl text-gold-soft tracking-wide">
           Tarot Reader
         </h1>
