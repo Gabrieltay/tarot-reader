@@ -15,9 +15,37 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tarot-reader-wheat.vercel.app";
+const title = "Tarot Reader";
+const description =
+  "Ask a question, draw a spread, and receive an AI-woven tarot reading.";
+
 export const metadata: Metadata = {
-  title: "Tarot Reader",
-  description: "Ask a question, draw a spread, and receive an AI-woven tarot reading.",
+  metadataBase: new URL(siteUrl),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    url: "/",
+    siteName: title,
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Tarot Reader — Your journey, revealed",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({
