@@ -215,6 +215,14 @@ export async function POST(request: NextRequest) {
     if (!res.ok) {
       const errText = await res.text();
       console.error("Gemini API error:", res.status, errText);
+
+      if (res.status === 429 || res.status === 503) {
+        return NextResponse.json(
+          { error: "The interpretation service is experiencing high demand. Please try again later." },
+          { status: 503 }
+        );
+      }
+
       return NextResponse.json(
         { error: "The interpretation service failed. Please try again." },
         { status: 502 }
