@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter } from "next/font/google";
 import CelestialBackdrop from "@/components/CelestialBackdrop";
+import InstallPrompt from "@/components/InstallPrompt";
+import ChunkErrorReload from "@/components/ChunkErrorReload";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -46,6 +48,15 @@ export const metadata: Metadata = {
     description,
     images: ["/og-image.jpg"],
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1b1535",
 };
 
 export default function RootLayout({
@@ -61,6 +72,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col relative">
         <CelestialBackdrop />
         <div className="flex flex-col flex-1 relative z-10">{children}</div>
+        <InstallPrompt />
+        <ChunkErrorReload />
         <footer className="relative z-10 text-center px-4 pt-8 pb-10">
           <div className="gold-divider max-w-xs mx-auto mb-5" />
           <p className="text-xs tracking-wide text-lavender-gray/50">
